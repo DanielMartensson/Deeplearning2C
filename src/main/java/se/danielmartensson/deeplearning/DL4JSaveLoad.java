@@ -71,7 +71,10 @@ public class DL4JSaveLoad {
 	 */
 	public String newFile() {
 		file = fileChooser.showSaveDialog(stage);
-		return file.getName();
+		if(file != null)
+			return file.getName();
+		else
+			return "";
 	}
 
 	public File getFile() {

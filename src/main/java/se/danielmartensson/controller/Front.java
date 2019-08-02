@@ -89,9 +89,11 @@ public class Front {
     	/*
     	 * Then create an initial model, save it and then change title
     	 */
-    	dL4J.initialModel();
-    	dL4J.getDl4JSaveLoad().saveModel();
-    	changeTitle(fileName);
+    	if(!fileName.equals("")) {
+	    	dL4J.initialModel();
+	    	dL4J.getDl4JSaveLoad().saveModel();
+	    	changeTitle(fileName);
+    	}
     	
     }
     
@@ -99,21 +101,17 @@ public class Front {
      * Change the title on the menu bar
      */
     private void changeTitle(String fileName) {
-    	/*
-    	 * If we are had saved or saved before, but aborted
-    	 */
-    	if(fileName != null) {
-	        front_stage = (Stage) lineChart.getScene().getWindow();
-			front_stage.setTitle("JNonlinearControl - " + fileName);
-			Save_Model_MenuItem.setDisable(false);
-			Save_Model_As_MenuItem.setDisable(false);
-    	}
+    	front_stage = (Stage) lineChart.getScene().getWindow();
+		front_stage.setTitle("JNonlinearControl - " + fileName);
+		Save_Model_MenuItem.setDisable(false);
+		Save_Model_As_MenuItem.setDisable(false);
     }
 
     @FXML
     void Open_Model(ActionEvent event) throws IOException {
     	String fileName = dL4J.getDl4JSaveLoad().loadModel();
-    	changeTitle(fileName);
+    	if(!fileName.equals("")) 
+    		changeTitle(fileName);
     }
 
     @FXML
