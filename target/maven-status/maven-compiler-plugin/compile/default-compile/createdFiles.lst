@@ -3,9 +3,9 @@ se/danielmartensson/deeplearning/DL4JLayers.class
 se/danielmartensson/generation/C_codeGeneration.class
 se/danielmartensson/deeplearning/DL4JGlobalConfig.class
 se/danielmartensson/tools/AlertBoxes.class
+se/danielmartensson/main/Main.class
 se/danielmartensson/deeplearning/DL4J.class
 se/danielmartensson/controller/Load_Data.class
-se/danielmartensson/JNonlinearControl/Main.class
 se/danielmartensson/controller/Front.class
 se/danielmartensson/deeplearning/DL4JSaveLoad.class
 se/danielmartensson/deeplearning/DL4JModel.class

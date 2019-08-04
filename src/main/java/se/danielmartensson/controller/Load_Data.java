@@ -19,7 +19,7 @@ public class Load_Data {
 
     @FXML
     void Load_CSV_Eval_Data(ActionEvent event) {
-
+    	
     }
 
     @FXML
@@ -47,4 +47,5 @@ public class Load_Data {
         assert tableView != null : "fx:id=\"tableView\" was not injected: check your FXML file 'load_data.fxml'.";
 
     }
+    
 }
