@@ -22,9 +22,9 @@ public class FileHandler {
 		 * Local root e.g /root/.gluon folder
 		 */
 		localRoot = Services.get(StorageService.class)
-	            .flatMap(s -> s.getPrivateStorage())
+	            .flatMap(s -> s.getPublicStorage(""))
 	            .orElseThrow(() -> new RuntimeException("Error retrieving private storage"));	
-		
+		System.out.println(localRoot.getAbsolutePath());
 		/*
 		 * Dialogs
 		 */
