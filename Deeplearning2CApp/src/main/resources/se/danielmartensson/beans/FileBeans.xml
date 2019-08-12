@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Create the file handler for saving and loading files -->
+	<bean id="fileHandler" class="se.danielmartensson.tools.FileHandler"></bean>
+	
+	<!-- Create the CSVHandler object -->
+	<bean id="cSVHandler" class="se.danielmartensson.tools.CSVHandler">
+		<constructor-arg index="0" ref="fileHandler"></constructor-arg>
+		<constructor-arg index="1" value="/Deeplearning2CStorage/NetworkTable.csv"></constructor-arg>
+		<constructor-arg index="2" value=","></constructor-arg>
+	</bean>
+	
+
+</beans>

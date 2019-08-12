@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context
            http://www.springframework.org/schema/context/spring-context.xsd">
-        
+
 	<!-- Create the global configuration class -->
-	<bean id="globalConfig" class="org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder"></bean>
-	
+	<bean id="globalConfig"
+		class="org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder"></bean>
+
 	<!-- Create the list builder that can hold the layers -->
-	<bean id="listBuilder" class="org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder">
+	<bean id="listBuilder"
+		class="org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder">
 		<constructor-arg index="0" ref="globalConfig"></constructor-arg>
 	</bean>
-	
+
 	<!-- Create the method set for global configuration -->
-	<bean id="dL4JGlobalConfig" class="se.danielmartensson.deeplearning.DL4JGlobalConfig">
+	<bean id="dL4JGlobalConfig"
+		class="se.danielmartensson.deeplearning.DL4JGlobalConfig">
 		<constructor-arg index="0" ref="globalConfig"></constructor-arg>
 	</bean>
-	
+
 	<!-- Create the method set for layers configuration -->
-	<bean id="dL4JLayers" class="se.danielmartensson.deeplearning.DL4JLayers">
+	<bean id="dL4JLayers"
+		class="se.danielmartensson.deeplearning.DL4JLayers">
 		<constructor-arg index="0" ref="listBuilder"></constructor-arg>
 	</bean>
-	
+
 	<!-- Create the method set for data load -->
-	<bean id="dL4JData" class="se.danielmartensson.deeplearning.DL4JData"></bean>
-	
+	<bean id="dL4JData"
+		class="se.danielmartensson.deeplearning.DL4JData"></bean>
+
 	<!-- Create the method set for using the neural network -->
-	<bean id="dL4JModel" class="se.danielmartensson.deeplearning.DL4JModel">
+	<bean id="dL4JModel"
+		class="se.danielmartensson.deeplearning.DL4JModel">
 		<constructor-arg index="0" ref="listBuilder"></constructor-arg>
 		<constructor-arg index="1" ref="dL4JData"></constructor-arg>
 	</bean>

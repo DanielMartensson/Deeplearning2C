@@ -10,12 +10,12 @@
    <center>
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="networkTable" prefHeight="300.0" prefWidth="200.0">
+            <TableView fx:id="networkTable" editable="true" prefHeight="490.0" prefWidth="350.0" stylesheets="@neuralnetworks.css">
               <columns>
-                <TableColumn prefWidth="75.0" text="Name" />
-                <TableColumn prefWidth="75.0" text="Network" />
-                  <TableColumn prefWidth="75.0" text="Created" />
-                  <TableColumn prefWidth="75.0" text="Accuracy" />
+                <TableColumn fx:id="columnName" prefWidth="75.0" text="Name" />
+                <TableColumn fx:id="columnNetwork" prefWidth="75.0" text="Network" />
+                  <TableColumn fx:id="columnTrained" prefWidth="91.0" text="Trained" />
+                  <TableColumn fx:id="columnAccuracy" prefWidth="76.0" text="Accuracy" />
               </columns>
             </TableView>
          </children></VBox>

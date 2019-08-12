@@ -16,10 +16,13 @@ import static se.danielmartensson.Main.GLOBALCONFIGURATION_VIEW;
 import static se.danielmartensson.Main.LAYERS_VIEW;
 import static se.danielmartensson.Main.TRAINEVALGENERATE_VIEW;
 import javafx.scene.image.Image;
+import se.danielmartensson.tools.Dialogs;
 
 public class DrawerManager {
 
-    public static void buildDrawer(MobileApplication app) {
+    private static Dialogs dialogs;
+
+	public static void buildDrawer(MobileApplication app) {
         NavigationDrawer drawer = app.getDrawer();
         
         NavigationDrawer.Header header = new NavigationDrawer.Header("Deeplearning2C",
@@ -35,11 +38,14 @@ public class DrawerManager {
 
         drawer.getItems().addAll(neuralnetworksItem, loaddataItem, globalconfigurationItem, layersItem, trainevalgenerateItem);
         
-        if (Platform.isDesktop()) {
+        dialogs = new Dialogs();
+        
+        if (true) { // Platform.isDesktop()
             final Item quitItem = new Item("Quit", MaterialDesignIcon.EXIT_TO_APP.graphic());
             quitItem.selectedProperty().addListener((obs, ov, nv) -> {
                 if (nv) {
-                    Services.get(LifecycleService.class).ifPresent(LifecycleService::shutdown);
+                	if(dialogs.question("Quit", "Do you want to quit?"))
+                		Services.get(LifecycleService.class).ifPresent(LifecycleService::shutdown);
                 }
             });
             drawer.getItems().add(quitItem);

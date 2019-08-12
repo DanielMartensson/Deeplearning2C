@@ -13,6 +13,8 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import se.danielmartensson.tools.Dialogs;
+
 /**
  * This class is will handle the train, evaluation and simulation
  */
@@ -26,6 +28,7 @@ public class DL4JModel {
 	private MultiLayerConfiguration multiLayerConfiguration;
 	private DataSetIterator dataTrainSetIterator;
 	private DataSetIterator dataEvalSetIterator;
+	private Dialogs dialogs;
 	
 	/*
 	 * Logger
@@ -36,6 +39,7 @@ public class DL4JModel {
 		this.listBuilder = listBuilder;
 		this.dataTrainSetIterator = dL4JData.getDataTrainSetIterator();
 		this.dataEvalSetIterator = dL4JData.getDataEvalSetIterator();
+		dialogs = new Dialogs();
 	}
 	
 	/**
@@ -91,19 +95,33 @@ public class DL4JModel {
 	/**
 	 * Load model and return its name
 	 * @param modelPath File path to the model
-	 * @throws IOException 
+	 * @param boolean
 	 */
-	public void loadModel(File modelPath) throws IOException{
-		multiLayerNetwork = MultiLayerNetwork.load(modelPath, true);
+	public boolean loadModel(File modelPath){
+		boolean load = false;
+		try {
+			multiLayerNetwork = MultiLayerNetwork.load(modelPath, true);
+			load = true;
+		} catch (IOException e) {
+			dialogs.exception("Cannot open model:\n" + modelPath.getPath(), e);
+		} 
+		return load;
 	}
 	
 	/**
 	 * Save the model
 	 * @param modelPath File path to the model
-	 * @throws IOException 
+	 * @return boolean
 	 */
-	public void saveModel(File modelPath) throws IOException {
-		multiLayerNetwork.save(modelPath, true); 
+	public boolean saveModel(File modelPath) {
+		boolean created = false;
+		try {
+			multiLayerNetwork.save(modelPath, true);
+			created = true;
+		} catch (IOException e) {
+			dialogs.exception("Cannot save model:\n" + modelPath.getPath(), e);
+		} 
+		return created;
 	}
 	
 	/**

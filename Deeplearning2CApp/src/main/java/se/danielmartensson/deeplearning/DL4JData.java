@@ -61,6 +61,7 @@ public class DL4JData {
 	 * @param labelIndexTo Indexing of start where our last output ends
 	 * @param numPossibleLabels How many labels does the data have
 	 * @param regression If regression data is used
+	 * @return DataSetIterator
 	 */
 	private DataSetIterator readCSVDataset(File fileCSV, char delimiter, int batchSize, int labelIndexFrom, int labelIndexTo, int numPossibleLabels, boolean regression) throws IOException, InterruptedException{
 		RecordReader recordReader = new CSVRecordReader(delimiter);

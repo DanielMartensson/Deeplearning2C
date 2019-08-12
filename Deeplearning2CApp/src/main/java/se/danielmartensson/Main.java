@@ -37,5 +37,6 @@ public class Main extends MobileApplication {
 
         scene.getStylesheets().add(Main.class.getResource("style.css").toExternalForm());
         ((Stage) scene.getWindow()).getIcons().add(new Image(Main.class.getResourceAsStream("/icon.png")));
+        ((Stage) scene.getWindow()).setTitle("Deeplearning2C");
     }
 }
