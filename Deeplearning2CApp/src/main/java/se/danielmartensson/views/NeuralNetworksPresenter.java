@@ -80,10 +80,11 @@ public class NeuralNetworksPresenter {
 				/*
 				 * Set the correct size on tableView
 				 */
-				// double widthBar = appBar.widthProperty().get();
+				//double widthBar = appBar.widthProperty().get();
 				double heightBar = appBar.heightProperty().get();
 				double heightScreen = Screen.getPrimary().getBounds().getHeight();
 				double widthScreen = Screen.getPrimary().getBounds().getWidth();
+				neuralnetworks.setPrefSize(widthScreen, heightScreen);
 				networkTable.setPrefSize(widthScreen, heightScreen - heightBar);
 
 				/*

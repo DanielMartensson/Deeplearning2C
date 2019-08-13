@@ -6,6 +6,7 @@ import java.io.IOException;
 import com.gluonhq.charm.down.Services;
 import com.gluonhq.charm.down.plugins.StorageService;
 
+
 public class FileHandler {
 	
 	/*
@@ -19,12 +20,12 @@ public class FileHandler {
 	 */
 	public FileHandler(){
 		/*
-		 * Local root e.g /root/.gluon folder
+		 * Local root e.g /root folder
 		 */
 		localRoot = Services.get(StorageService.class)
-	            .flatMap(s -> s.getPublicStorage(""))
+	            .flatMap(s -> s.getPublicStorage("Documents"))
 	            .orElseThrow(() -> new RuntimeException("Error retrieving private storage"));	
-		System.out.println(localRoot.getAbsolutePath());
+
 		/*
 		 * Dialogs
 		 */
@@ -83,6 +84,26 @@ public class FileHandler {
 		}else {
 			return file;
 		}
+	}
+	
+	/**
+	 * Scan a folder and list all files
+	 * @param fileExtension File extension such as .csv, .txt or .png etc.
+	 * @param pathCSVFolder Our string path to the folder
+	 * @return File[]
+	 */
+	public File[] scanFolder(String fileExtension, String pathCSVFolder) {
+		File folder = new File(localRoot + pathCSVFolder);
+		if(folder.exists() == false) {
+			folder.mkdirs(); // Create one
+		}
+		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
+		if (files != null) {
+			return files;
+		}else {
+			return null;
+		}
+		
 	}
 
 }

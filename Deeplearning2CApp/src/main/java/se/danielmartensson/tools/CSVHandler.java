@@ -23,21 +23,16 @@ public class CSVHandler {
 
 	/**
 	 * Constructor that will open a csv file
-	 * 
-	 * @param file      Our csv file
-	 * @param delimiter Our csv file separator
+	 * @param fileHandler File handler object
+	 * @param filePath Path to the file
+	 * @param delimiter Separator
 	 */
-	public CSVHandler(FileHandler fileHandler, String NetworkTablePath, String delimiter) {
-        file = fileHandler.loadFile(NetworkTablePath);
+	public CSVHandler(FileHandler fileHandler, String filePath, String delimiter) {
+        file = fileHandler.loadFile(filePath);
 		arrayList = new ArrayList<>();
 		dialogs = new Dialogs();
 		this.delimiter = delimiter;
-
-		if (delimiter.equals(",") == true) {
-			updateCSVHandler();
-		} else {
-			dialogs.alertDialog(AlertType.ERROR, "Cannot use ','", "Select another file name");
-		}
+		updateCSVHandler();
 	}
 
 	/**

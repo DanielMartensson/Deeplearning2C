@@ -46,9 +46,9 @@ public class DL4JData {
 	 * @param labelIndexFrom Indexing of start where our first output begin
 	 * @param labelIndexTo Indexing of start where our last output ends
 	 * @param numPossibleLabels How many labels does the data have
-	 * @param regression If regression data is used, then labelIndexTo does not matter
+	 * @param regression If regression data is used, then numPossibleLabels does not matter
 	 */
-	public void loadEvalDataRegression(File fileCSV, char delimiter, int batchSize, int labelIndexFrom, int labelIndexTo, int numPossibleLabels, boolean regression) throws IOException, InterruptedException {
+	public void loadEvalData(File fileCSV, char delimiter, int batchSize, int labelIndexFrom, int labelIndexTo, int numPossibleLabels, boolean regression) throws IOException, InterruptedException {
 		dataEvalSetIterator = readCSVDataset(fileCSV, delimiter, batchSize, labelIndexFrom, labelIndexTo, numPossibleLabels, regression);
 	}
 	
@@ -60,7 +60,7 @@ public class DL4JData {
 	 * @param labelIndexFrom Indexing of start where our first output begin
 	 * @param labelIndexTo Indexing of start where our last output ends
 	 * @param numPossibleLabels How many labels does the data have
-	 * @param regression If regression data is used
+	 * @param regression If regression data is used, then numPossibleLabels does not matter
 	 * @return DataSetIterator
 	 */
 	private DataSetIterator readCSVDataset(File fileCSV, char delimiter, int batchSize, int labelIndexFrom, int labelIndexTo, int numPossibleLabels, boolean regression) throws IOException, InterruptedException{
@@ -75,7 +75,7 @@ public class DL4JData {
 	
 	/**
 	 * Normalize data from the CSV file
-	 * @param normalizer Normalizer interface. Can be either AbstractDataSetNormalizer or NormalizerStandardize object as argument
+	 * @param normalizer Normalizer interface. Can be NormalizerStandardize object as argument
 	 */
 	public void normalization(DataNormalization normalizer) {
 		fitTransformation(normalizer, dataEvalSetIterator);
