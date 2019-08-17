@@ -19,14 +19,12 @@ import se.danielmartensson.tools.Dialogs;
 
 public class DrawerManager {
 
-    private static Dialogs dialogs;
+    private static Dialogs dialogs = new Dialogs();
 
 	public static void buildDrawer(MobileApplication app) {
         NavigationDrawer drawer = app.getDrawer();
         
-        NavigationDrawer.Header header = new NavigationDrawer.Header("Deeplearning2C",
-                "C-Code generator",
-                new Avatar(21, new Image(DrawerManager.class.getResourceAsStream("/icon.png"))));
+        NavigationDrawer.Header header = new NavigationDrawer.Header("Deeplearning2C","C-Code generator", new Avatar(21, new Image(DrawerManager.class.getResourceAsStream("/icon.png"))));
         drawer.setHeader(header);
         
         final Item neuralnetworksItem = new ViewItem("Neural Networks", MaterialDesignIcon.HOME.graphic(), NEURALNETWORKS_VIEW, ViewStackPolicy.SKIP);
@@ -34,12 +32,9 @@ public class DrawerManager {
         final Item globalconfigurationItem = new ViewItem("Global Configuration", MaterialDesignIcon.DASHBOARD.graphic(), GLOBALCONFIGURATION_VIEW);
         final Item layersItem = new ViewItem("Layers", MaterialDesignIcon.DASHBOARD.graphic(), LAYERS_VIEW);
         final Item trainevalgenerateItem = new ViewItem("Train Eval Generate", MaterialDesignIcon.DASHBOARD.graphic(), TRAINEVALGENERATE_VIEW);
-
         drawer.getItems().addAll(neuralnetworksItem, loaddataItem, globalconfigurationItem, layersItem, trainevalgenerateItem);
         
-        dialogs = new Dialogs();
-        
-        if (true) { // Platform.isDesktop()
+        if (true) { // Used to be Platform.isDesktop()
             final Item quitItem = new Item("Quit", MaterialDesignIcon.EXIT_TO_APP.graphic());
             quitItem.selectedProperty().addListener((obs, ov, nv) -> {
                 if (nv) {

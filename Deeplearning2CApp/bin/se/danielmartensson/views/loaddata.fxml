@@ -3,6 +3,7 @@
 <?import com.gluonhq.charm.glisten.control.CardPane?>
 <?import com.gluonhq.charm.glisten.control.DropdownButton?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
@@ -10,42 +11,45 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<View fx:id="loaddata" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="350.0" stylesheets="@loaddata.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.LoadDataPresenter">
+<View fx:id="loaddata" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" stylesheets="@loaddata.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.LoadDataPresenter">
    <center>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane prefWidth="400.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints fx:id="gridPane0" hgrow="SOMETIMES" minWidth="10.0" prefWidth="50.0" />
+          <ColumnConstraints fx:id="gridPane1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="150.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <CardPane GridPane.columnIndex="1">
+            <CardPane fx:id="rightCardPane" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <items>
-                  <DropdownButton fx:id="trainDataDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="evalDataDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="regressionDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="delimiterDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="batchSizeDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="labelIndexFromDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="labelIndexToDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="numPossibleLabelsDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <DropdownButton fx:id="datanormalizerDropDown" prefHeight="38.0" style="-fx-padding: 6;" />
-                  <Button mnemonicParsing="false" onAction="#execute" prefHeight="38.0" prefWidth="337.0" text="Execute" />
+                  <DropdownButton fx:id="trainDataDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="evalDataDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="dataTypeDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="delimiterDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="batchSizeDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="labelIndexFromDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="labelIndexToDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="numPossibleLabelsDropDown" style="-fx-padding: 0;" />
+                  <DropdownButton fx:id="datanormalizerDropDown" style="-fx-padding: 0;" />
+                  <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
                </items>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
             </CardPane>
-            <CardPane>
-                <Label prefHeight="38.0" style="-fx-padding:10;" text="Training data:" />
-                <Label prefHeight="38.0" style="-fx-padding:10;" text="Evaluation data:" />
-                <Label prefHeight="38.0" style="-fx-padding:10;" text="Data type:" />
-               <Label prefHeight="38.0" style="-fx-padding:10;" text="Seperator:" />
-               <Label prefHeight="38.0" style="-fx-padding: 10;" text="Batch size:" />
-               <Label fx:id="labelIndexFromLabel" prefHeight="38.0" style="-fx-padding:10;" text="Label index from:" />
-               <Label prefHeight="38.0" style="-fx-padding:10;" text="Label index to:" />
-               <Label prefHeight="38.0" style="-fx-padding:10;" text="Possible labels:" />
-               <Label prefHeight="38.0" style="-fx-padding: 10;" text="Data normalizer:" />
-               <Label prefHeight="38.0" style="-fx-padding:10;" text="Generate data:" />
+            <CardPane fx:id="leftCardPane" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                <Label style="-fx-padding: 5;" text="Training data:" />
+                <Label style="-fx-padding: 4;" text="Evaluation data:" />
+                <Label style="-fx-padding: 4;" text="Data type:" />
+               <Label style="-fx-padding: 5;" text="Seperator:" />
+               <Label style="-fx-padding: 4;" text="Batch size:" />
+               <Label fx:id="labelIndexFromLabel" style="-fx-padding: 4;" text="Label index from:" />
+               <Label fx:id="labelIndexToLabel" style="-fx-padding: 5;" text="Label index to:" />
+               <Label fx:id="possibleLabelsLabel" style="-fx-padding: 5;" text="Possible labels:" />
+               <Label style="-fx-padding: 5;" text="Data normalizer:" />
+               <Label style="-fx-padding: 7;" text="Generate data:" />
             </CardPane>
          </children>
       </GridPane>

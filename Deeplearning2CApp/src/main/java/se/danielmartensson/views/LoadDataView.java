@@ -11,7 +11,7 @@ public class LoadDataView {
             View view = FXMLLoader.load(LoadDataView.class.getResource("loaddata.fxml"));
             return view;
         } catch (IOException e) {
-            System.out.println("IOException: " + e);
+            System.out.println("IOException: " + e.getMessage());
             return new View();
         }
     }

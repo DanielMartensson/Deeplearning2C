@@ -33,6 +33,7 @@
                   <DropdownButton fx:id="labelIndexToDropDown" style="-fx-padding: 0;" />
                   <DropdownButton fx:id="numPossibleLabelsDropDown" style="-fx-padding: 0;" />
                   <DropdownButton fx:id="datanormalizerDropDown" style="-fx-padding: 0;" />
+                  <Button fx:id="scanButton" mnemonicParsing="false" onAction="#scan" text="Scan" />
                   <Button fx:id="executeButton" mnemonicParsing="false" onAction="#execute" text="Execute" />
                </items>
                <GridPane.margin>
@@ -49,6 +50,7 @@
                <Label fx:id="labelIndexToLabel" style="-fx-padding: 5;" text="Label index to:" />
                <Label fx:id="possibleLabelsLabel" style="-fx-padding: 5;" text="Possible labels:" />
                <Label style="-fx-padding: 5;" text="Data normalizer:" />
+               <Label style="-fx-padding: 7;" text="Scan data:" />
                <Label style="-fx-padding: 7;" text="Generate data:" />
             </CardPane>
          </children>

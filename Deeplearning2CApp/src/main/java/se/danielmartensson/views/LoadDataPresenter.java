@@ -1,7 +1,12 @@
 package se.danielmartensson.views;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.nd4j.linalg.dataset.api.preprocessor.NormalizerStandardize;
 import org.springframework.context.ApplicationContext;
@@ -25,7 +30,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.stage.Screen;
 import se.danielmartensson.deeplearning.DL4JData;
-import se.danielmartensson.tools.CSVHandler;
 import se.danielmartensson.tools.Dialogs;
 import se.danielmartensson.tools.FileHandler;
 
@@ -33,6 +37,15 @@ public class LoadDataPresenter {
 
 	@FXML
     private View loaddata;
+
+    @FXML
+    private ColumnConstraints gridPane0;
+
+    @FXML
+    private ColumnConstraints gridPane1;
+
+    @FXML
+    private CardPane<?> rightCardPane;
 
     @FXML
     private DropdownButton trainDataDropDown;
@@ -60,6 +73,15 @@ public class LoadDataPresenter {
 
     @FXML
     private DropdownButton datanormalizerDropDown;
+    
+    @FXML
+    private Button scanButton;
+
+    @FXML
+    private Button executeButton;
+
+    @FXML
+    private CardPane<?> leftCardPane;
 
     @FXML
     private Label labelIndexFromLabel;
@@ -69,87 +91,25 @@ public class LoadDataPresenter {
 
     @FXML
     private Label possibleLabelsLabel;
-    
-    @FXML
-    private CardPane<?> leftCardPane;
-    
-    @FXML
-    private CardPane<?> rightCardPane;
-    
-    @FXML
-    private Button executeButton;
-    
-    @FXML
-    private ColumnConstraints gridPane0;
-
-    @FXML
-    private ColumnConstraints gridPane1;
 
 	private DL4JData dL4JData;
 
-	private FileHandler fileHandler;
+	private FileHandler fileHandler = new FileHandler();
 	
 	private final String pathCSVFolder = "/Deeplearning2CStorage/CSV/";
 	private final String fileExtension = ".csv";
 
-	private MenuItem dataTypeMenuItem;
-
-	private MenuItem delimiterMenuItem;
-
-	private MenuItem trainDataMenuItem;
-
-	private MenuItem evalDataMenuItem;
-
-	private MenuItem batchSizeMenuItem;
-
-	private MenuItem labelIndexFromMenuItem;
-
-	private MenuItem labelIndexToMenuItem;
-
-	private MenuItem numPossibleLabelsMenuItem;
-
-	private MenuItem datanormalizerMenuItem;
-
-	private CSVHandler cSVHandler;
-
-	private Dialogs dialogs;
+	private Dialogs dialogs = new Dialogs();
 
 	public void initialize() {
 		loaddata.setShowTransitionFactory(BounceInRightTransition::new);
-		fileHandler = new FileHandler();
-		dialogs = new Dialogs();
 
 		loaddata.showingProperty().addListener((obs, oldValue, newValue) -> {
 			if (newValue) {
 				AppBar appBar = MobileApplication.getInstance().getAppBar();
 				appBar.setNavIcon(MaterialDesignIcon.MENU.button(e -> MobileApplication.getInstance().getDrawer().open()));
 				appBar.setTitleText("Load Data");
-				
 			}
-	
-			/*
-			 * Load all CSV files once when we slide into this page
-			 */
-			File files[] = fileHandler.scanFolder(fileExtension, pathCSVFolder);
-			trainDataDropDown.getItems().clear();
-			evalDataDropDown.getItems().clear();
-			for(File file : files) {
-				trainDataDropDown.getItems().addAll(new MenuItem(file.getName()));
-				evalDataDropDown.getItems().addAll(new MenuItem(file.getName()));
-			}
-			
-			/*
-			 * Select the menu items we had been saving before, when we slide into this page
-			 */
-			insertSavings(trainDataMenuItem, trainDataDropDown);
-			insertSavings(evalDataMenuItem, evalDataDropDown);
-			insertSavings(delimiterMenuItem, delimiterDropDown);
-			insertSavings(dataTypeMenuItem, dataTypeDropDown);
-			insertSavings(batchSizeMenuItem, batchSizeDropDown);
-			insertSavings(labelIndexFromMenuItem, labelIndexFromDropDown);
-			insertSavings(labelIndexToMenuItem, labelIndexToDropDown);
-			insertSavings(numPossibleLabelsMenuItem, numPossibleLabelsDropDown);
-			insertSavings(datanormalizerMenuItem, datanormalizerDropDown);
 		});
 		
 		/*
@@ -161,7 +121,7 @@ public class LoadDataPresenter {
 		gridPane0.setPrefWidth(widthScreen*0.1);
 		gridPane1.setPrefWidth(widthScreen*0.9);
 		executeButton.setPrefWidth(widthScreen*0.9); // Long button
-
+		scanButton.setPrefWidth(widthScreen*0.9); // Long button
 
 		/*
 		 * Connect to our DL4J classes and its functionality
@@ -173,87 +133,21 @@ public class LoadDataPresenter {
 		});
 		
 		/*
-		 * Listener for data type 
+		 * Listener for data type
 		 */
-		dataTypeDropDown.selectedItemProperty().addListener(e->{
-			dataTypeMenuItem = dataTypeDropDown.getSelectedItem(); // Save
-			hideLabels();
-		});
+		dataTypeDropDown.selectedItemProperty().addListener(e -> hideLabels());
 		
 		/*
-		 * Listener for delimiter
-		 */
-		delimiterDropDown.selectedItemProperty().addListener(e->{
-			delimiterMenuItem = delimiterDropDown.getSelectedItem(); // Save
-			reloadBatchLabels();
-		});
-		
-		/*
-		 * Listener for train data 
-		 */
-		trainDataDropDown.selectedItemProperty().addListener(e->{
-			trainDataMenuItem = trainDataDropDown.getSelectedItem(); // Save
-			reloadBatchLabels();
-		});
-		
-		/*
-		 * Listener for eval data
-		 */
-		evalDataDropDown.selectedItemProperty().addListener(e->{
-			evalDataMenuItem = evalDataDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Listener for batch size
-		 */
-		batchSizeDropDown.selectedItemProperty().addListener(e->{
-			batchSizeMenuItem = batchSizeDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Listener for label index from
-		 */
-		labelIndexFromDropDown.selectedItemProperty().addListener(e->{
-			labelIndexFromMenuItem = labelIndexFromDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Listener for label index to
-		 */
-		labelIndexToDropDown.selectedItemProperty().addListener(e->{
-			labelIndexToMenuItem = labelIndexToDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Listener for possible labels
-		 */
-		numPossibleLabelsDropDown.selectedItemProperty().addListener(e->{
-			numPossibleLabelsMenuItem = numPossibleLabelsDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Listener for data normalization
-		 */
-		datanormalizerDropDown.selectedItemProperty().addListener(e->{
-			datanormalizerMenuItem = datanormalizerDropDown.getSelectedItem(); // Save
-		});
-		
-		/*
-		 * Set static values - Never going to change if DL4J not change
+		 * Add initial menu items to drop downs
 		 */
 		dataTypeDropDown.getItems().addAll(new MenuItem("Regression"), new MenuItem("Classification"));
 		delimiterDropDown.getItems().addAll(new MenuItem(";"), new MenuItem(","));
 		datanormalizerDropDown.getItems().addAll(new MenuItem("NormalizerStandardize"), new MenuItem("None"));
+		batchSizeDropDown.getItems().add(new MenuItem("0"));
+		labelIndexFromDropDown.getItems().add(new MenuItem("0"));
+		labelIndexToDropDown.getItems().add(new MenuItem("0"));
+		numPossibleLabelsDropDown.getItems().add(new MenuItem("0"));
 		
-	}
-
-	/**
-	 * This saves a lot of lines.
-	 * The purpose with this method is to insert the menuItem again if we go back to this page.
-	 */
-	private void insertSavings(MenuItem menuItem, DropdownButton dropDown) {
-		if(menuItem != null) 
-			dropDown.setSelectedItem(menuItem);
 	}
 
 	/**
@@ -261,7 +155,7 @@ public class LoadDataPresenter {
 	 * select regression or classification
 	 */
 	private void hideLabels() {
-		if(dataTypeMenuItem.getText().equals("Regression") == true) {
+		if(dataTypeDropDown.getSelectedItem().getText().equals("Regression") == true) {
 			numPossibleLabelsDropDown.setDisable(true); // Using regression, we don't need possible labels 
 			labelIndexToDropDown.setDisable(false);
 			labelIndexFromLabel.setText("Label index from:");
@@ -279,79 +173,117 @@ public class LoadDataPresenter {
 	/**
 	 * Reload the batch size and labels if we change the train data or delimiter
 	 */
-	private void reloadBatchLabels() {
+	private void reloadBatchAndLabels() {
 		/*
-		 * Get rows and columns of selected training data
+		 * Get the data in the csv handler
 		 */
-		if(trainDataMenuItem != null && delimiterMenuItem != null) {
-			String trainDatafileName = trainDataMenuItem.getText();
-			String delimiter = delimiterMenuItem.getText();
-			cSVHandler = new CSVHandler(fileHandler, pathCSVFolder + trainDatafileName, delimiter);
-			int rows = cSVHandler.getTotalRows();
-			int columns = cSVHandler.getTotalColumns();
+		String trainDatafileName = trainDataDropDown.getSelectedItem().getText(); 
+		String delimiter = delimiterDropDown.getSelectedItem().getText();
+		List<List<String>> records = new ArrayList<>();
+		File file = fileHandler.loadFile(pathCSVFolder + trainDatafileName);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		        String[] values = line.split(delimiter);
+		        records.add(Arrays.asList(values));
+		    }
+		    br.close();
+		}catch(IOException e) {
+			dialogs.exception("Cannot open CSV file: \n" + trainDatafileName, e);
+		}
 			
-			/*
-			 * Label index from size and label index to can be as long as total columns in the CSV file
-			 */
-			labelIndexFromDropDown.getItems().clear();
-			labelIndexToDropDown.getItems().clear();
-			for(int i = 0; i < columns; i++) {
-				labelIndexFromDropDown.getItems().add(new MenuItem(String.valueOf(i)));
-				labelIndexToDropDown.getItems().add(new MenuItem(String.valueOf(i)));
-			}
+		/*
+		 * Label index from and label index to  can be as long as total columns in the CSV file
+		 */
+		insert(labelIndexFromDropDown, labelIndexToDropDown, records.get(0).size()); // Column size on row 0
 			
-			/*
-			 * Batch size and possible labels can be as long as total rows in the CSV file
-			 */
-			batchSizeDropDown.getItems().clear();
-			numPossibleLabelsDropDown.getItems().clear();
-			for(int i = 0; i < rows; i++) {
-				batchSizeDropDown.getItems().add(new MenuItem(String.valueOf(i)));
-				numPossibleLabelsDropDown.getItems().add(new MenuItem(String.valueOf(i)));
-			}
+		/*
+		 * Batch size and possible labels can be as long as total rows in the CSV file
+		 */
+		insert(batchSizeDropDown, numPossibleLabelsDropDown, records.size()); // Row size
+		
+		records.clear();
+	}
+	
+	/**
+	 * Insert new menu items depending after they have been cleared out
+	 */
+	private void insert(DropdownButton dropDownButton1, DropdownButton dropDownButton2, int length) {
+		dropDownButton1.getItems().clear();
+		dropDownButton2.getItems().clear();
+		for(int i = 0; i < length; i++) {
+			dropDownButton1.getItems().add(new MenuItem(String.valueOf(i)));
+			dropDownButton2.getItems().add(new MenuItem(String.valueOf(i)));
+		}
+	}
+	
+	/**
+	 * Scan for CSV data
+	 * @param event
+	 */
+	@FXML
+    void scan(ActionEvent event) {
+		/*
+		 * Load all CSV files once when we first time slide into this page
+		 */
+		File files[] = fileHandler.scanFolder(fileExtension, pathCSVFolder);
+		for(File file : files) {
+			trainDataDropDown.getItems().addAll(new MenuItem(file.getName()));
+			evalDataDropDown.getItems().addAll(new MenuItem(file.getName()));
 		}
 		
-	}
+		/*
+		 * Warning if we missing data
+		 */
+		if(files.length == 0)
+			dialogs.alertDialog(AlertType.WARNING, "Missing", "You need to add CSV data.");
+		else 
+			reloadBatchAndLabels();
+    }
 
-	/*
+	/**
 	 * Finally we create our data!
+	 * @param event
 	 */
 	@FXML
     void execute(ActionEvent event) {
-		/*
-		 * Is everything OK?
-		 * delimiterMenuItem, fileHandler, datanormalizerMenuItem is always non-null
-		 */
-		if(fileHandler != null && delimiterMenuItem != null && batchSizeMenuItem != null && labelIndexFromMenuItem != null && labelIndexToMenuItem != null && numPossibleLabelsMenuItem != null && dataTypeMenuItem != null && trainDataMenuItem != null && evalDataMenuItem != null) {
+		if (trainDataDropDown.getSelectedItem() != null && evalDataDropDown.getSelectedItem() != null) {
 			/*
 			 * Get all data now and load it
 			 */
-			String trainDatafileName = trainDataMenuItem.getText();
-			String evalDatafileName = evalDataMenuItem.getText();
+			String trainDatafileName = trainDataDropDown.getSelectedItem().getText();
+			String evalDatafileName = evalDataDropDown.getSelectedItem().getText();
+			String dataType = dataTypeDropDown.getSelectedItem().getText();
 			File trainDataFile = fileHandler.loadFile(pathCSVFolder + trainDatafileName);
 			File evalDataFile = fileHandler.loadFile(pathCSVFolder + evalDatafileName);
-			char delimiter = delimiterMenuItem.getText().charAt(0);
-			int batchSize = Integer.parseInt(batchSizeMenuItem.getText());
-			int labelIndexFrom = Integer.parseInt(labelIndexFromMenuItem.getText());
-			int labelIndexTo = Integer.parseInt(labelIndexToMenuItem.getText());
-			int numPossibleLabels = Integer.parseInt(numPossibleLabelsMenuItem.getText());
+			char delimiter = delimiterDropDown.getSelectedItem().getText().charAt(0);
+			int batchSize = Integer.parseInt(batchSizeDropDown.getSelectedItem().getText());
+			int labelIndexFrom = Integer.parseInt(labelIndexFromDropDown.getSelectedItem().getText());
+			int labelIndexTo = Integer.parseInt(labelIndexToDropDown.getSelectedItem().getText());
+			if(labelIndexFrom > labelIndexTo) {
+				dialogs.alertDialog(AlertType.WARNING, "Label", "Lable from cannot be larger than label to");
+				return;
+			}
+			int numPossibleLabels = Integer.parseInt(numPossibleLabelsDropDown.getSelectedItem().getText());
+			String dataNormalizer = datanormalizerDropDown.getSelectedItem().getText();
 			boolean regression = false;
-			if(dataTypeMenuItem.getText().equals("Regression") == true) {
+			if(dataType.equals("Regression") == true) {
 				regression = true; // Regression data
 			}else {
 				regression = false; // Classification data
 			}
+			
+			/*
+			 * Load train and eval data
+			 */
 			try {
-				/*
-				 * Load train and eval data
-				 */
 				dL4JData.loadTrainData(trainDataFile, delimiter, batchSize, labelIndexFrom, labelIndexTo, numPossibleLabels, regression);
 				dL4JData.loadEvalData(evalDataFile, delimiter, batchSize, labelIndexFrom, labelIndexTo, numPossibleLabels, regression);
 			
 				/*
 				 * Normalize our data if needed
 				 */
-				if(datanormalizerMenuItem.getText().equals("NormalizerStandardize") == true) {
+				if(dataNormalizer.equals("NormalizerStandardize") == true) {
 					dL4JData.normalization(new NormalizerStandardize());
 				}
 				
@@ -359,14 +291,12 @@ public class LoadDataPresenter {
 				 * Print success!
 				 */
 				dialogs.alertDialog(AlertType.INFORMATION, "Success", "Data created to the model!");
-			} catch (IOException | IndexOutOfBoundsException | InterruptedException | NumberFormatException | IllegalStateException e) {
+			
+			} catch (IOException | IndexOutOfBoundsException | InterruptedException | IllegalStateException | IllegalArgumentException e) {
 				dialogs.exception("Could not load data to model!", e);
 			}
-
 		}else {
-			dialogs.alertDialog(AlertType.INFORMATION, "Missing input", "Do you have forgot something?");
+			dialogs.alertDialog(AlertType.INFORMATION, "Missing", "Do you have forgot something?");
 		}
     }
-
-
 }

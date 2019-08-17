@@ -7,29 +7,17 @@ import com.gluonhq.charm.down.Services;
 import com.gluonhq.charm.down.plugins.StorageService;
 
 
+
 public class FileHandler {
-	
-	/*
-	 * Fields
-	 */
 	private File localRoot;
-	private Dialogs dialogs;
+	private Dialogs dialogs = new Dialogs();
 
 	/**
 	 * Constructor - Open connection to root catalog
+	 * Local root e.g /root/Documents folder
 	 */
 	public FileHandler(){
-		/*
-		 * Local root e.g /root folder
-		 */
-		localRoot = Services.get(StorageService.class)
-	            .flatMap(s -> s.getPublicStorage("Documents"))
-	            .orElseThrow(() -> new RuntimeException("Error retrieving private storage"));	
-
-		/*
-		 * Dialogs
-		 */
-		dialogs = new Dialogs();
+		localRoot = Services.get(StorageService.class).flatMap(s -> s.getPublicStorage("Documents")).orElseThrow(() -> new RuntimeException("Error retrieving private storage"));	
 	}
 	
 	/**
@@ -47,6 +35,7 @@ public class FileHandler {
 				return file;
 			}
 		}else {
+			System.out.println("Create the new file");
 			createTheFile(file);
 			return file;
 		}
@@ -59,6 +48,7 @@ public class FileHandler {
 	 */
 	private void createTheFile(File file) {
 		try {
+			System.out.println("Creating...");
 			file.createNewFile();
 		} catch (IOException e) {
 			dialogs.exception("Cannot create the file at:\n" + file.getAbsolutePath(), e);
@@ -69,11 +59,12 @@ public class FileHandler {
 	 * Load a file
 	 * @param filePath Sting path to our file 
 	 * @return File
-	 * 
 	 */
 	public File loadFile(String filePath) {
 		File file = new File(localRoot + filePath);
+		System.out.println(file.getAbsolutePath());
 		if(file.exists() == false) {
+			System.out.println("Yes...file " + file.getPath() + " exist");
 			return createNewFile(filePath); // Not exist, we create one instead
 		}else if(file.canRead() == false) {
 			dialogs.exception("This file cannot be readed:\n" + filePath, new IOException());
@@ -82,6 +73,7 @@ public class FileHandler {
 			dialogs.exception("This file cannot be written to:\n" + filePath, new IOException());
 			return null;
 		}else {
+			System.out.println("return file");
 			return file;
 		}
 	}
@@ -94,16 +86,13 @@ public class FileHandler {
 	 */
 	public File[] scanFolder(String fileExtension, String pathCSVFolder) {
 		File folder = new File(localRoot + pathCSVFolder);
-		if(folder.exists() == false) {
+		if(folder.exists() == false) 
 			folder.mkdirs(); // Create one
-		}
-		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
-		if (files != null) {
-			return files;
-		}else {
-			return null;
-		}
 		
+		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
+		if (files != null) 
+			return files;
+		else 
+			return null;
 	}
-
 }

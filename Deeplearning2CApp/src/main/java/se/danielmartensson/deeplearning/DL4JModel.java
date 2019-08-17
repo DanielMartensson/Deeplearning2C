@@ -13,33 +13,26 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import lombok.Getter;
 import se.danielmartensson.tools.Dialogs;
 
 /**
  * This class is will handle the train, evaluation and simulation
  */
 public class DL4JModel {
-
-	/*
-	 * Objects
-	 */
 	private ListBuilder listBuilder;
 	private MultiLayerNetwork multiLayerNetwork;
 	private MultiLayerConfiguration multiLayerConfiguration;
 	private DataSetIterator dataTrainSetIterator;
 	private DataSetIterator dataEvalSetIterator;
-	private Dialogs dialogs;
-	
-	/*
-	 * Logger
-	 */
+	private Dialogs dialogs = new Dialogs();
+	private @Getter File modelPath;
 	private static Logger log = LoggerFactory.getLogger(DL4JModel.class);
 	
 	public DL4JModel(ListBuilder listBuilder, DL4JData dL4JData) {
 		this.listBuilder = listBuilder;
 		this.dataTrainSetIterator = dL4JData.getDataTrainSetIterator();
 		this.dataEvalSetIterator = dL4JData.getDataEvalSetIterator();
-		dialogs = new Dialogs();
 	}
 	
 	/**
@@ -98,14 +91,15 @@ public class DL4JModel {
 	 * @param boolean
 	 */
 	public boolean loadModel(File modelPath){
-		boolean load = false;
+		boolean loaded = false;
+		this.modelPath = modelPath;
 		try {
 			multiLayerNetwork = MultiLayerNetwork.load(modelPath, true);
-			load = true;
+			loaded = true;
 		} catch (IOException e) {
 			dialogs.exception("Cannot open model:\n" + modelPath.getPath(), e);
 		} 
-		return load;
+		return loaded;
 	}
 	
 	/**
@@ -116,9 +110,11 @@ public class DL4JModel {
 	public boolean saveModel(File modelPath) {
 		boolean created = false;
 		try {
+			this.modelPath = modelPath;
+			System.out.println("Saving mode now...");
 			multiLayerNetwork.save(modelPath, true);
 			created = true;
-		} catch (IOException e) {
+		} catch (IOException | NullPointerException e) {
 			dialogs.exception("Cannot save model:\n" + modelPath.getPath(), e);
 		} 
 		return created;
@@ -131,10 +127,8 @@ public class DL4JModel {
 	 * @throws IOException 
 	 */
 	public void renameModel(File newModelPath, File modelPath) throws IOException {
-		if(modelPath.exists()) {
+		if(modelPath.exists()) 
 			modelPath.delete();
-		}
 		saveModel(newModelPath);
 	}
-	
 }

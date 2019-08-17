@@ -27,14 +27,12 @@ public class Main extends MobileApplication {
         addViewFactory(GLOBALCONFIGURATION_VIEW, () -> new GlobalConfigurationView().getView());
         addViewFactory(LAYERS_VIEW, () -> new LayersView().getView());
         addViewFactory(TRAINEVALGENERATE_VIEW, () -> new TrainEvalGenerateView().getView());
-
         DrawerManager.buildDrawer(this);
     }
 
     @Override
     public void postInit(Scene scene) {
         Swatch.BLUE.assignTo(scene);
-
         scene.getStylesheets().add(Main.class.getResource("style.css").toExternalForm());
         ((Stage) scene.getWindow()).getIcons().add(new Image(Main.class.getResourceAsStream("/icon.png")));
         ((Stage) scene.getWindow()).setTitle("Deeplearning2C");

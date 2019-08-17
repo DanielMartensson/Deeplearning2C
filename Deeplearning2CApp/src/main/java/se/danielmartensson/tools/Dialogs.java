@@ -12,8 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 
 public class Dialogs {
-	
-	
 	/**
 	 * Create an exception dialog with intro text and an exception
 	 * @param introText Text to show
@@ -83,10 +81,9 @@ public class Dialogs {
 		question.setContentText(content);
 		question.setContentText(content);
 		Optional<ButtonType> result = question.showAndWait();
-		if(result.get() == ButtonType.OK) {
+		if(result.get() == ButtonType.OK) 
 			return true; // Yes!
-		}else {
+		else 
 			return false; // No!
-		}
 	}
 }

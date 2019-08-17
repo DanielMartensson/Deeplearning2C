@@ -1,183 +1,220 @@
 package se.danielmartensson.tools;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import javafx.scene.control.Alert.AlertType;
+import de.siegmar.fastcsv.reader.CsvContainer;
+import de.siegmar.fastcsv.reader.CsvParser;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRow;
+import de.siegmar.fastcsv.writer.CsvWriter;
 
+
+/**
+ * The reason why we are using FastCSV and not SQLite, is due to memory use.
+ * @author Daniel Mårtensson
+ *
+ */
 public class CSVHandler {
-
-	/*
-	 * Fields
-	 */
-	private ArrayList<ArrayList<String>> arrayList;
-	private Dialogs dialogs;
+	private Dialogs dialogs = new Dialogs();
+	private CsvReader csvReader;
+	private CsvWriter csvWriter;;
 	private File file;
 	private String delimiter;
-	protected FileHandler fileHandler;
-
+	
 	/**
-	 * Constructor that will open a csv file
+	 * Constructor 
 	 * @param fileHandler File handler object
-	 * @param filePath Path to the file
-	 * @param delimiter Separator
+	 * @param filePath Path to our file
+	 * @param delimiter Separator "," or ";" etc.
+	 * @param headers String that contains name of columns with delimiter as separator
 	 */
-	public CSVHandler(FileHandler fileHandler, String filePath, String delimiter) {
+	public CSVHandler(FileHandler fileHandler, String filePath, String delimiter, String headers) {
         file = fileHandler.loadFile(filePath);
-		arrayList = new ArrayList<>();
-		dialogs = new Dialogs();
-		this.delimiter = delimiter;
-		updateCSVHandler();
+        this.delimiter = delimiter;
+        csvWriter = new CsvWriter();
+        csvReader = new CsvReader();
+        csvReader.setFieldSeparator(delimiter.charAt(0));
+        csvWriter.setFieldSeparator(delimiter.charAt(0));
+        
+        /*
+         * Check if file has 0 rows = empty
+         */
+        if(getTotalRows() == 0)
+        	newHeader(headers); // Write our header if we don't have one
+        csvReader.setContainsHeader(true);
 	}
-
+	
 	/**
-	 * Update the CSVHandler object
+	 * Return a complete row
+	 * @param row Row number that we want to return
+	 * @return
 	 */
-	private void updateCSVHandler() {
+	public List<String> getRow(int row) {
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String line;
-			arrayList.clear();
-			ArrayList<String> rowList;
-			while ((line = br.readLine()) != null) {
-				String[] values = line.split(delimiter);
-				rowList = new ArrayList<String>();
-				for(int i = 0; i < values.length; i++) {
-					rowList.add(values[i]);
-				}
-				arrayList.add(rowList); // Add row after row 
-			}
-			br.close();
-		} catch (IOException e) {
-			dialogs.exception("Cannot open CSV file:\n" + file.getAbsolutePath(), e);
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			return csvContainer.getRow(row).getFields();
+		}catch(IOException | NullPointerException e) {
+			dialogs.exception("Cannot get rows. Return List<String> = null", e);
+			return null;
 		}
 	}
-
-	/**
-	 * Get a single cell
-	 * 
-	 * @param row    Row index
-	 * @param column Column index
-	 * @return String
-	 */
-	public String getCell(int row, int column) {
-		return arrayList.get(row).get(column);
-	}
-
-	/**
-	 * Change a single cell in both CSV file and CSVHandler object
-	 * 
-	 * @param row    Row index
-	 * @param column Column index
-	 * @param value
-	 */
-	public void setCell(int row, int column, String value) {
-		arrayList.get(row).add(column, value); // Update
-		copyToCSV();
-	}
-	
 	
 	/**
-	 * Search if the name already exist
-	 * @param value Our search value
+	 * Replace a whole row
+	 * @param row row number
+	 * @param text text with delimiter separator
+	 */
+	public void replaceRow(int row, String text) {
+		try {
+			/*
+			 * Replace all items in a row
+			 */
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			Collection<String[]> data = new ArrayList<>();
+			data.add((String[]) csvContainer.getHeader().toArray()); // Add header
+			for(int i = 0; i < csvContainer.getRowCount(); i++) 
+				if(i == row) 
+					data.add(text.split(String.valueOf(delimiter))); // Add the replaced data
+				else
+					data.add((String[]) csvContainer.getRow(i).getFields().toArray()); // Add everything else
+			csvWriter.write(file, StandardCharsets.UTF_8, data); // Auto close
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot replace row", e);
+		}
+	}
+	
+	/**
+	 * Search for a cell value in a g
+	 * @param cellValue The cell in form of a string
+	 * @param header Name of the column
 	 * @return boolean
 	 */
-	public boolean exist(String name) {
-		for (int i = 0; i < getTotalRows(); i++) {
-			if(name.equals(arrayList.get(i).get(0))){
-				return true; // Exist
-			}
+	public boolean exist(String cellValue, String header) {
+		try {
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			if(csvContainer == null)
+				return false; // Nothing has been added, except the header
+			for(int i = 0; i < csvContainer.getRowCount(); i++)
+				if(cellValue.equals(csvContainer.getRow(i).getField(header)) == true)
+					return true; // Yes
+			return false; // Nope
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot check existens. Returning false", e);
+			return false;
 		}
-		return false; // Not exist
 	}
 	
 	/**
-	 * Find on which row number the name is
-	 * @param name String of the name
+	 * Find on which row cellValue is on a header
+	 * @param cellValue
+	 * @param header
 	 * @return int
 	 */
-	public int findRow(String name) {
-		int rowNumber = 0;
-		for (int i = 0; i < getTotalRows(); i++) {
-			if(name.equals(arrayList.get(i).get(0))){
-				rowNumber = i;
-				break;
-			}
+	public int findRow(String cellValue, String header) {
+		try {
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			for(int i = 0; i < csvContainer.getRowCount(); i++)
+				if(cellValue.equals(csvContainer.getRow(i).getField(header)) == true)
+					return i; // Yes
+			return 0; // Nope
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot find row index. Returning 0", e);
+			return 0;
 		}
-		return rowNumber;
 	}
 	
 	/**
-	 * Delete the whole row
-	 * @param row
+	 * Delete the whole row at least if we got a row
+	 * @param row row number 
 	 */
-	public void deleteRow(int row) {
-		arrayList.remove(row);
-		copyToCSV();
-	}
-
-	/**
-	 * This will copy the whole CSVHandler object to the CSV file
-	 */
-	private void copyToCSV() {
+	public void deleteRow(int row)  {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
-			String allText = "";
-			for (int i = 0; i < getTotalRows(); i++) {
-				for (int j = 0; j < getTotalColumns(); j++) {
-					allText += arrayList.get(i).get(j) + delimiter; // Collect all text
-				}
-				allText += "\n"; // New line
-			}
-			bw.write(allText);
-			bw.close();
-		} catch (IOException e) {
-			dialogs.exception("Cannot open CSV file:\n" + file.getAbsolutePath(), e);
+			/*
+			 * Remove a selected row
+			 */
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			Collection<String[]> data = new ArrayList<>();
+			data.add((String[]) csvContainer.getHeader().toArray()); // Add header
+			for(int i = 0; i < csvContainer.getRowCount(); i++) 
+				if(i != row) 
+					data.add((String[]) csvContainer.getRow(i).getFields().toArray()); // Add everything, except on selected row
+			csvWriter.write(file, StandardCharsets.UTF_8, data); // Auto close
+			
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot delete row", e);
 		}
 	}
 
 	/**
-	 * Write a new row to the CSV file
-	 * 
-	 * @param rowText Enter the new row text. Don't forget the delimiter too!
+	 * Write a new header to the CSV file if the file is empty.
+	 * @param rowText Enter the string
+	 */
+	private void newHeader(String rowText) {
+		try {
+			Collection<String[]> data = new ArrayList<>();
+			data.add(rowText.split(delimiter)); // Add the header data
+			csvWriter.write(file, StandardCharsets.UTF_8, data); // Auto close
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot write now row", e);
+		}
+	}
+	
+	/**
+	 * Create a new row
+	 * @param rowText
 	 */
 	public void newRow(String rowText) {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-			bw.write(rowText + "\n");
-			bw.close();
-			updateCSVHandler();
+			CsvParser csvParser = csvReader.parse(file, StandardCharsets.UTF_8);
+			Collection<String[]> data = new ArrayList<>();
+			CsvRow csvRow = csvParser.nextRow(); // Need to call this to get the header
+			data.add((String[]) csvParser.getHeader().toArray()); // Add header
+			if(csvRow != null)
+				data.add((String[]) csvRow.getFields().toArray()); // Add the row under the header
+			while((csvRow = csvParser.nextRow()) != null) {
+				data.add((String[]) csvRow.getFields().toArray()); // Add existing lines to data
+			}
+			data.add(rowText.split(delimiter)); // Add the new line to data with a new line
+			csvWriter.write(file, StandardCharsets.UTF_8, data); // Auto close
 		} catch (IOException e) {
-			dialogs.exception("Cannot open CSV file:\n" + file.getAbsolutePath(), e);
+			dialogs.exception("Cannot add new rows", e);
 		}
-
 	}
 
 	/**
 	 * Return total rows
-	 * 
-	 * @return int
+	 * @return int total rows
 	 */
 	public int getTotalRows() {
-		return arrayList.size();
+		try {
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			if(csvContainer == null)
+				return 0; // Null means no rows here
+			return csvContainer.getRowCount();
+		} catch (IOException e) {
+			dialogs.exception("Cannot find total rows. Returning 0", e);
+			return 0;
+		}
 	}
 
 	/**
 	 * Return total columns, in this case, it's on row index 0
-	 * 
-	 * @return int
+	 * @return int total columns
 	 */
 	public int getTotalColumns() {
-
-		if (arrayList.get(0) == null) {
+		try {
+			CsvContainer csvContainer = csvReader.read(file, StandardCharsets.UTF_8);
+			if(csvContainer == null)
+				return 0; // Null means no rows here
+			return csvContainer.getRow(0).getFieldCount();
+		} catch (IOException e) {
+			dialogs.exception("Cannot find total columns. Returning 0.", e);
 			return 0;
-		} else {
-			return arrayList.get(0).size();
 		}
 	}
 }

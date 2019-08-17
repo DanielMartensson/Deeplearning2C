@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.gluonhq.charm.glisten.control.CardPane?>
+<?import com.gluonhq.charm.glisten.control.DropdownButton?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
 <View fx:id="globalconfig" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="350.0" stylesheets="@globalconfiguration.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.GlobalConfigurationPresenter">
    <center>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER" />
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints fx:id="gridPane0" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints fx:id="gridPane1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <CardPane>
+                <Label style="-fx-padding:10;" text="Seed:" />
+                <Label style="-fx-padding:10;" text="Optimization algorithm:" />
+                <Label style="-fx-padding:10;" text="Updater:" />
+               <Label fx:id="learningRateLabel" style="-fx-padding:10;" text="Learning rate:" />
+               <Label fx:id="momentumLabel" style="-fx-padding:10;" text="Momentum:" />
+               <Label style="-fx-padding: 10;" text="Regularization:" />
+               <Label style="-fx-padding: 10;" text="L1/L2 Coefficient:" />
+               <Label style="-fx-padding: 10;" text="Weight initializer:" />
+            </CardPane>
+            <CardPane GridPane.columnIndex="1">
+               <items>
+                  <DropdownButton fx:id="seedDropDown" style="-fx-padding: 6;" />
+                  <DropdownButton fx:id="optimizationAlgorithmDropDown" style="-fx-padding: 5;" />
+                  <DropdownButton fx:id="updaterDropDown" style="-fx-padding: 6;" />
+                  <DropdownButton fx:id="learningRateDropDown" style="-fx-padding: 5;" />
+                  <DropdownButton fx:id="momentumDropDown" style="-fx-padding: 5;" />
+                  <DropdownButton fx:id="regularizationDropDown" style="-fx-padding: 6;" />
+                  <DropdownButton fx:id="l1L2CoefficientDropDown" style="-fx-padding: 6;" />
+                  <DropdownButton fx:id="weightInitializerDropDown" style="-fx-padding: 5;" />
+               </items>
+            </CardPane>
+         </children>
+      </GridPane>
    </center>
 </View>

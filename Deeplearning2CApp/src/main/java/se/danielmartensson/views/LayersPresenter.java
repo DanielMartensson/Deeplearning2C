@@ -12,12 +12,17 @@ import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.TableView;
 import se.danielmartensson.deeplearning.DL4JLayers;
+import se.danielmartensson.containers.LayerTableContainer;
 
 public class LayersPresenter {
 
     @FXML
     private View layers;
+    
+    @FXML
+    private TableView<LayerTableContainer> layersTable;
 
 	private DL4JLayers dL4JLayers;
 
@@ -41,8 +46,8 @@ public class LayersPresenter {
                         System.out.println("Favorite")));
                 
                 appBar.getActionItems().add(MaterialDesignIcon.REMOVE.button(e -> 
-                System.out.println("Favorite")));
-            }
+                		System.out.println("Favorite")));
+            }	
         });
         
         /*

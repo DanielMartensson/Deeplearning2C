@@ -25,6 +25,7 @@ dependencies {
     compile group: 'org.datavec', name: 'datavec-api', version: '1.0.0-beta4'
 	compile 'com.gluonhq:ignite-spring:1.0.2'
 	compile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+	compile group: 'de.siegmar', name: 'fastcsv', version: '1.0.3'
 }
 
 jfxmobile {

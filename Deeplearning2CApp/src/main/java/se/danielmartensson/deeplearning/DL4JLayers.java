@@ -15,10 +15,6 @@ import lombok.Setter;
  * This class is made for creations of the layers
  */
 public class DL4JLayers {
-
-	/*
-	 * Objects
-	 */
 	private @Getter @Setter ListBuilder listBuilder;
 	
 	/**
@@ -86,5 +82,4 @@ public class DL4JLayers {
 				.activation(activation)
 				.build());
 	}
-
 }

@@ -10,11 +10,12 @@
 	<!-- Create the file handler for saving and loading files -->
 	<bean id="fileHandler" class="se.danielmartensson.tools.FileHandler"></bean>
 	
-	<!-- Create the CSVHandler object -->
-	<bean id="cSVHandler" class="se.danielmartensson.tools.CSVHandler">
+	<!-- Create the network table CSV object -->
+	<bean id="networkTableCSV" class="se.danielmartensson.tools.CSVHandler">
 		<constructor-arg index="0" ref="fileHandler"></constructor-arg>
 		<constructor-arg index="1" value="/Deeplearning2CStorage/NetworkTable.csv"></constructor-arg>
 		<constructor-arg index="2" value=","></constructor-arg>
+		<constructor-arg index="3" value="Name,Network,Trained,Accuracy,Seed,OptimizationAlgorithm,Updater,LearningRate,Momentum,Regulurazation,Coefficent,Weight"></constructor-arg>
 	</bean>
 	
 

@@ -14,8 +14,6 @@ import lombok.Getter;
 
 
 public class DL4JData {
-	
-
 	private @Getter DataSetIterator dataEvalSetIterator;
 	private @Getter DataSetIterator dataTrainSetIterator;
 
@@ -95,5 +93,4 @@ public class DL4JData {
 		}
 		dataSetIterator.reset();
 	}
-
 }
