@@ -2,14 +2,17 @@ package se.danielmartensson.tools;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import com.gluonhq.charm.down.Services;
 import com.gluonhq.charm.down.plugins.StorageService;
 
-
+import javafx.scene.control.Alert.AlertType;
 
 public class FileHandler {
-	private File localRoot;
+
+	private static File localRoot;
 	private Dialogs dialogs = new Dialogs();
 
 	/**
@@ -21,78 +24,121 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Create a new file
-	 * @param filePath Sting path to our file
-	 * @return File
+	 * This method will create a file and then delete the file.
+	 * @param filePath Our file path
 	 */
-	public File createNewFile(String filePath) {
+	public void runCreateDeleteTest(String filePath) {
 		File file = new File(localRoot + filePath);
-		file.getParentFile().mkdirs(); // Create folders
-		if(file.exists() == true) {
-			boolean overwrite = dialogs.question("File already exist.", "Should we overwrite?");
-			if(overwrite == true) {
-				createTheFile(file);
-				return file;
-			}
-		}else {
-			System.out.println("Create the new file");
-			createTheFile(file);
-			return file;
-		}
-		return null; // We pressed cancel to overwrite
+		file.mkdirs();
+		createTheFile(file);
+		file.delete();
 	}
 	
+	/**
+	 * Delete the file
+	 * @param filePath Our file path
+	 */
+	public void deleteFile(String filePath) {
+		File file = loadNewFile(filePath);
+		if(file.delete() == false)
+			dialogs.alertDialog(AlertType.ERROR, "Delete", "Cannot delete file: \n" + filePath);
+	}
+	
+	/**
+	 * This will create a new file
+	 * @param filePath Our file path
+	 * @param allwaysOverwrite Set this to true if we don't want any question about overwriting
+	 */
+	public void createNewFile(String filePath, boolean allwaysOverwrite) {
+		File file = new File(localRoot + filePath);
+		file.getParentFile().mkdirs(); // Create folders, if it's not created
+		if(file.exists() == true && allwaysOverwrite == false) {
+			if(dialogs.question("File already exist", "Should we overwrite?") == true)
+				createTheFile(file);
+			else 
+				return; // Cancle
+		}else {
+			createTheFile(file);
+		}
+	}
+
 	/**
 	 * This will create the file
 	 * @param file Our file
 	 */
 	private void createTheFile(File file) {
 		try {
-			System.out.println("Creating...");
 			file.createNewFile();
 		} catch (IOException e) {
 			dialogs.exception("Cannot create the file at:\n" + file.getAbsolutePath(), e);
 		}
 	}
-	
+
 	/**
-	 * Load a file
-	 * @param filePath Sting path to our file 
+	 * Load the file
+	 * @param filePath Our file path
 	 * @return File
 	 */
-	public File loadFile(String filePath) {
+	public File loadNewFile(String filePath) {
 		File file = new File(localRoot + filePath);
-		System.out.println(file.getAbsolutePath());
-		if(file.exists() == false) {
-			System.out.println("Yes...file " + file.getPath() + " exist");
-			return createNewFile(filePath); // Not exist, we create one instead
-		}else if(file.canRead() == false) {
-			dialogs.exception("This file cannot be readed:\n" + filePath, new IOException());
+		if(file.exists() == false)
 			return null;
-		}else if(file.canWrite() == false) {
-			dialogs.exception("This file cannot be written to:\n" + filePath, new IOException());
-			return null;
-		}else {
-			System.out.println("return file");
+		else
 			return file;
-		}
+	}
+	
+	/**
+	 * Check if a file exist
+	 * @param filePath Our file path
+	 * @return boolean
+	 */
+	public boolean exist(String filePath) {
+		File file = new File(localRoot + filePath);
+		if(file.exists() == false)
+			return false;
+		else
+			return true;
 	}
 	
 	/**
 	 * Scan a folder and list all files
 	 * @param fileExtension File extension such as .csv, .txt or .png etc.
-	 * @param pathCSVFolder Our string path to the folder
+	 * @param pathToFolder Our string path to the folder
 	 * @return File[]
 	 */
-	public File[] scanFolder(String fileExtension, String pathCSVFolder) {
-		File folder = new File(localRoot + pathCSVFolder);
+	public File[] scanFolder(String fileExtension, String pathToFolder) {
+		File folder = new File(localRoot + pathToFolder);
 		if(folder.exists() == false) 
 			folder.mkdirs(); // Create one
 		
 		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
-		if (files != null) 
+		if (files != null) {
+			/*
+			 * Sort on date modified
+			 */
+			Arrays.sort(files, new Comparator<File>() {
+			    public int compare(File f1, File f2) {
+			        return Long.compare(f1.lastModified(), f2.lastModified());
+			    }
+			});
+			
 			return files;
-		else 
+		}else {
 			return null;
+		}
+	}
+	
+	/**
+	 * Count the files inside a folder
+	 * @param fileExtension File extension such as .csv, .txt or .png etc.
+	 * @param pathToFolder Our string path to the folder
+	 * @return int
+	 */
+	public int countFiles(String fileExtension, String pathToFolder) {
+		File[] files = scanFolder(fileExtension, pathToFolder);
+		if(files == null)
+			return 0; // No files
+		else
+			return files.length;
 	}
 }

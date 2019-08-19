@@ -3,132 +3,123 @@ package se.danielmartensson.deeplearning;
 import java.io.File;
 import java.io.IOException;
 
+import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
+import org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.nd4j.evaluation.classification.Evaluation;
-import org.nd4j.evaluation.regression.RegressionEvaluation;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.deeplearning4j.nn.weights.WeightInit;
+import org.nd4j.linalg.activations.Activation;
+import org.nd4j.linalg.lossfunctions.LossFunctions;
 
+import javafx.scene.control.Alert.AlertType;
 import lombok.Getter;
 import se.danielmartensson.tools.Dialogs;
+import se.danielmartensson.tools.FileHandler;
 
-/**
- * This class is will handle the train, evaluation and simulation
- */
 public class DL4JModel {
-	private ListBuilder listBuilder;
+	
+	/*
+	 * Tools
+	 */
+	private Dialogs dialogs = new Dialogs();
+	private FileHandler fileHandler = new FileHandler();
+	
+	/*
+	 * DL4J
+	 */
+	private @Getter DL4JSerializableConfiguration dL4JSerializableConfiguration = new DL4JSerializableConfiguration();
 	private MultiLayerNetwork multiLayerNetwork;
 	private MultiLayerConfiguration multiLayerConfiguration;
-	private DataSetIterator dataTrainSetIterator;
-	private DataSetIterator dataEvalSetIterator;
-	private Dialogs dialogs = new Dialogs();
-	private @Getter File modelPath;
-	private static Logger log = LoggerFactory.getLogger(DL4JModel.class);
-	
-	public DL4JModel(ListBuilder listBuilder, DL4JData dL4JData) {
-		this.listBuilder = listBuilder;
-		this.dataTrainSetIterator = dL4JData.getDataTrainSetIterator();
-		this.dataEvalSetIterator = dL4JData.getDataEvalSetIterator();
-	}
-	
-	/**
-	 * Build the model
-	 */
-	public void buildModel() {
-		multiLayerConfiguration = listBuilder.build();
-		multiLayerNetwork = new MultiLayerNetwork(multiLayerConfiguration);
-	}
+	private ListBuilder listBuilder;
+	private Builder builder;
 
+	public DL4JModel() {
+		
+	}
+	
 	/**
-	 * Start the model
+	 * Create a basic model - We should always create a model after we have create a file
+	 * @param filePath Our file path
 	 */
-	public void initModel() {
+	public void createBasicModel(String filePath) { 
+		/*
+		 * Create a json global configuration
+		 */
+		dL4JSerializableConfiguration.setSeed(100);
+		dL4JSerializableConfiguration.setOptimizationAlgorithm(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT);
+		dL4JSerializableConfiguration.setWeightInit(WeightInit.XAVIER);
+		dL4JSerializableConfiguration.setUpdaterName("Sgd");
+		dL4JSerializableConfiguration.setLearningRate(0.01);
+		dL4JSerializableConfiguration.setMomentum(0.01);
+		dL4JSerializableConfiguration.setRegularizationName("L1");
+		dL4JSerializableConfiguration.setRegularizationCoefficient(Math.pow(10, 0));
+		
+		/*
+		 * Layer configuration
+		 */
+		dL4JSerializableConfiguration.clearLayer();
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, null);
+		dL4JSerializableConfiguration.addLayer("LSTM", 3, 3, Activation.RELU, null);
+		dL4JSerializableConfiguration.addLayer("OutputLayer", 3, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD);
+		
+		/*
+		 * Build the configuration by first create the builder for global configuration.
+		 * Then create the layers and build everything to a multilayer configuration
+		 */
+		builder = new NeuralNetConfiguration.Builder();
+		listBuilder = dL4JSerializableConfiguration.runConfiguration(builder);
+		multiLayerConfiguration = listBuilder.build();
+		
+		/*
+		 * Create the network model from multilayer configuration
+		 */
+		multiLayerNetwork = new MultiLayerNetwork(multiLayerConfiguration);
+		
+		/*
+		 * Start model
+		 */
 		multiLayerNetwork.init();
+
+	    /*
+	     * Save the model - Initial .zip file need to exist first!
+	     * Clear layers
+	     */   
+	    saveModel(filePath);
+	    dL4JSerializableConfiguration.clearLayer();
 	}
 	
 	/**
-	 * Set a listener
-	 * @param printIterations How many iterations?
+	 * Save model and serializable
+	 * @param filePath Our file path
 	 */
-	public void setListener(int printIterations) {
-		multiLayerNetwork.setListeners(new ScoreIterationListener(printIterations));
-	}
-	
-	/**
-	 * Train the model
-	 * @param numEpochs How many iterations?
-	 */
-	public void trainModel(int numEpochs) {
-		for(int i = 0; i < numEpochs; i++) {
-			dataTrainSetIterator.reset();
-			multiLayerNetwork.fit(dataTrainSetIterator);
+	public void saveModel(String filePath) {
+		File locationToSave = fileHandler.loadNewFile(filePath);   
+	    boolean saveUpdater = true;                                            
+	    try {
+			multiLayerNetwork.save(locationToSave, saveUpdater);
+			dL4JSerializableConfiguration.saveSerializable(filePath.replace(".zip", ".ser"));
+		} catch (IOException e) {
+			dialogs.exception("Cannot save model:\n" + filePath, e);
 		}
 	}
 	
 	/**
-	 * Evaluate the model from classification data
+	 * Load model and deserializable
+	 * @param filePath Our file path
+	 * @param displaySuccessDialog Set this to true if you want a success message, false if you don't want to see it.
 	 */
-	public void evaluateClassificationModel() {
-		Evaluation evaluation =  multiLayerNetwork.evaluate(dataEvalSetIterator);
-		log.info(evaluation.stats());
-	}
-	
-	/**
-	 * Evaluate the model from regression data
-	 */
-	public void evaluateRegressionModel() {
-		RegressionEvaluation regressionEvaluation = multiLayerNetwork.evaluateRegression(dataEvalSetIterator);
-		log.info(regressionEvaluation.stats());
-	}
-	
-	/**
-	 * Load model and return its name
-	 * @param modelPath File path to the model
-	 * @param boolean
-	 */
-	public boolean loadModel(File modelPath){
-		boolean loaded = false;
-		this.modelPath = modelPath;
+	public void loadModel(String filePath, boolean displaySuccessDialog) {
+		File locationToLoad = fileHandler.loadNewFile(filePath); 
+		boolean saveUpdater = true;
 		try {
-			multiLayerNetwork = MultiLayerNetwork.load(modelPath, true);
-			loaded = true;
+			multiLayerNetwork = MultiLayerNetwork.load(locationToLoad, saveUpdater);
+			dL4JSerializableConfiguration.loadDeserializable(filePath.replace(".zip", ".ser")); 
+			if(displaySuccessDialog == true)
+				dialogs.alertDialog(AlertType.INFORMATION, "Success", "Model loaded");
 		} catch (IOException e) {
-			dialogs.exception("Cannot open model:\n" + modelPath.getPath(), e);
-		} 
-		return loaded;
-	}
-	
-	/**
-	 * Save the model
-	 * @param modelPath File path to the model
-	 * @return boolean
-	 */
-	public boolean saveModel(File modelPath) {
-		boolean created = false;
-		try {
-			this.modelPath = modelPath;
-			System.out.println("Saving mode now...");
-			multiLayerNetwork.save(modelPath, true);
-			created = true;
-		} catch (IOException | NullPointerException e) {
-			dialogs.exception("Cannot save model:\n" + modelPath.getPath(), e);
-		} 
-		return created;
-	}
-	
-	/**
-	 * Rename the model
-	 * @param newModelPath New file path to the model
-	 * @param modelPath File path to the model
-	 * @throws IOException 
-	 */
-	public void renameModel(File newModelPath, File modelPath) throws IOException {
-		if(modelPath.exists()) 
-			modelPath.delete();
-		saveModel(newModelPath);
+			dialogs.exception("Cannot load model:\n" + filePath, e);
+		}
 	}
 }

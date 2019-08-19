@@ -10,12 +10,10 @@ import org.deeplearning4j.datasets.datavec.RecordReaderDataSetIterator;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.dataset.api.preprocessor.DataNormalization;
 
-import lombok.Getter;
-
 
 public class DL4JData {
-	private @Getter DataSetIterator dataEvalSetIterator;
-	private @Getter DataSetIterator dataTrainSetIterator;
+	private static DataSetIterator dataEvalSetIterator;
+	private static DataSetIterator dataTrainSetIterator;
 
 	/**
 	 * Constructor

@@ -23,7 +23,6 @@ public class Dialogs {
 		exceptionDialog.setException(e);
 		exceptionDialog.showAndWait();
 	}
-	
 
 	/**
 	 * Ask a question. Default return is false
@@ -49,7 +48,6 @@ public class Dialogs {
 		});
 		dialog.getButtons().addAll(button_OK, button_CANCLE);
 		return dialog.showAndWait().get();
-		
 	}
 	
 	/**
@@ -65,8 +63,6 @@ public class Dialogs {
 		info.setContentText(content);
 		info.showAndWait();
 	}
-	
-	
 	
 	/**
 	 * Asking for selection
