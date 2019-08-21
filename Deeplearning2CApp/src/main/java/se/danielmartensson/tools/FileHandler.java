@@ -35,11 +35,16 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Delete the file
+	 * Delete the file if it's exist
 	 * @param filePath Our file path
 	 */
 	public void deleteFile(String filePath) {
 		File file = loadNewFile(filePath);
+		if (exist(filePath) == false) {
+			dialogs.alertDialog(AlertType.WARNING, "Delete", "The file: \n" + filePath + "\nDid not exist. Just continue as normal.");
+			return;
+		}
+
 		if(file.delete() == false)
 			dialogs.alertDialog(AlertType.ERROR, "Delete", "Cannot delete file: \n" + filePath);
 	}

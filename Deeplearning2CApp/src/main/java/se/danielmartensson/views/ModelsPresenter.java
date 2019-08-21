@@ -20,7 +20,7 @@ import lombok.Getter;
 import se.danielmartensson.deeplearning.DL4JModel;
 import se.danielmartensson.tools.Dialogs;
 import se.danielmartensson.tools.FileHandler;
-import se.danielmartensson.tools.StaticDependencyInjection;
+import se.danielmartensson.tools.SimpleDependencyInjection;
 
 /**
  * Model view class.
@@ -59,7 +59,7 @@ public class ModelsPresenter {
     	/*
 		 * Dependency injection
 		 */
-		dL4JModel = StaticDependencyInjection.contextDL4J.getBean("dL4JModel", DL4JModel.class);
+		dL4JModel = SimpleDependencyInjection.getDL4JModel();
 		
     	/*
     	 * Run this test so we make sure that we can create and delete files

@@ -25,6 +25,7 @@ import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 
+import javafx.scene.control.Alert.AlertType;
 import lombok.Getter;
 import lombok.Setter;
 import se.danielmartensson.tools.Dialogs;
@@ -42,7 +43,9 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
-
+	private final @Getter String[] dropdownTypes = {"Layer type:", "Number inputs:", "Number outputs:", "Activation type:", "Loss function type:"};
+	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer"};
+	
 	/*
 	 * Global configuration
 	 */
@@ -59,11 +62,11 @@ public class DL4JSerializableConfiguration implements Serializable {
 	/*
 	 * Layer configuration - They have their "setters" from addLayer() method below
 	 */
-	private @Getter ArrayList<String> layerList = new ArrayList<String>(); 
-	private @Getter ArrayList<Integer> nInList = new ArrayList<Integer>();
-	private @Getter ArrayList<Integer> nOutList = new ArrayList<Integer>(); 
-	private @Getter ArrayList<Activation> activationList = new ArrayList<Activation>(); 
-	private @Getter ArrayList<LossFunctions.LossFunction> lossFunctionList = new ArrayList<LossFunctions.LossFunction>(); 
+	private @Getter @Setter ArrayList<String> layerList = new ArrayList<String>(); 
+	private @Getter @Setter ArrayList<Integer> nInList = new ArrayList<Integer>();
+	private @Getter @Setter ArrayList<Integer> nOutList = new ArrayList<Integer>(); 
+	private @Getter @Setter ArrayList<Activation> activationList = new ArrayList<Activation>(); 
+	private @Getter @Setter ArrayList<LossFunctions.LossFunction> lossFunctionList = new ArrayList<LossFunctions.LossFunction>(); 
 	
 	/**
 	 * This will load the configurations to the private fields
@@ -76,6 +79,10 @@ public class DL4JSerializableConfiguration implements Serializable {
 			 */
 			FileHandler fileHandler = new FileHandler();
 			File file = fileHandler.loadNewFile(filePath);
+			if(file.exists() == false) {
+				new Dialogs().alertDialog(AlertType.WARNING, "Missing", "Missing file " + file.getName() + " just re-save and load model by clicking on selected row");
+				return;
+			}
 			FileInputStream fileInputStream = new FileInputStream(file);
 	        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 	        DL4JSerializableConfiguration dL4JSerializableConfiguration = (DL4JSerializableConfiguration) objectInputStream.readObject();
@@ -97,6 +104,8 @@ public class DL4JSerializableConfiguration implements Serializable {
 	        nOutList = dL4JSerializableConfiguration.getNOutList();
 	        activationList = dL4JSerializableConfiguration.getActivationList();
 	        lossFunctionList = dL4JSerializableConfiguration.getLossFunctionList();
+	        
+	        System.out.println("Layer size when deserialize = " + layerList.size());
 	        
 	        /*
 	         * Close
@@ -129,6 +138,8 @@ public class DL4JSerializableConfiguration implements Serializable {
 			objectOutputStream.writeObject(this); // All fields
 			objectOutputStream.close();
 			fileOutputStream.close();
+			
+			System.out.println("Layer size when serialize = " + layerList.size());
 		} catch (IOException e) {
 			new Dialogs().exception("Cannot write ser file:\n" + filePath, e);
 		}
@@ -174,20 +185,21 @@ public class DL4JSerializableConfiguration implements Serializable {
 		 * Layer configuration
 		 */
 		ListBuilder listBuilder = new ListBuilder(builder);
+		System.out.println("Layer size when config = " + layerList.size());
 		for(int i = 0; i < layerList.size(); i++) 
-			if(layerList.get(i).equals("DenseLayer") == true) {
+			if(contains(layerList.get(i), layerNames) == true) {
 				listBuilder.layer(new DenseLayer.Builder()
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
 						.activation(activationList.get(i))
 						.build());
-			}else if(layerList.get(i).equals("LSTM") == true) {
+			}else if(contains(layerList.get(i), layerNames) == true) {
 				listBuilder.layer(new LSTM.Builder()
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
 						.activation(activationList.get(i))
 						.build());
-			}else if(layerList.get(i).equals("OutputLayer") == true) {
+			}else if(contains(layerList.get(i), layerNames) == true) {
 				listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
@@ -197,6 +209,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 		/*
 		 * Return our configuration
 		 */
+		System.out.println("Layer size after config = " + layerList.size());
 		return listBuilder; 
 	}
 	
@@ -233,7 +246,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	 * @param items
 	 * @return boolean
 	 */
-	public boolean contains(String inputStr, String[] items) {
+	private boolean contains(String inputStr, String[] items) {
 	    return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
 	}
 }

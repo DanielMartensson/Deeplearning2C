@@ -49,7 +49,7 @@ public class DL4JModel {
 		 */
 		dL4JSerializableConfiguration.setSeed(100);
 		dL4JSerializableConfiguration.setOptimizationAlgorithm(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT);
-		dL4JSerializableConfiguration.setWeightInit(WeightInit.XAVIER);
+		dL4JSerializableConfiguration.setWeightInit(WeightInit.ONES);
 		dL4JSerializableConfiguration.setUpdaterName("Sgd");
 		dL4JSerializableConfiguration.setLearningRate(0.01);
 		dL4JSerializableConfiguration.setMomentum(0.01);
@@ -57,7 +57,7 @@ public class DL4JModel {
 		dL4JSerializableConfiguration.setRegularizationCoefficient(Math.pow(10, 0));
 		
 		/*
-		 * Layer configuration
+		 * Layer configuration - We need at least ONE layer
 		 */
 		dL4JSerializableConfiguration.clearLayer();
 		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, null);
@@ -70,7 +70,12 @@ public class DL4JModel {
 		 */
 		builder = new NeuralNetConfiguration.Builder();
 		listBuilder = dL4JSerializableConfiguration.runConfiguration(builder);
+		try {
 		multiLayerConfiguration = listBuilder.build();
+		} catch(IllegalStateException e) {
+			dialogs.exception("Cannot create basic model", e);
+			return;
+		}
 		
 		/*
 		 * Create the network model from multilayer configuration
@@ -100,7 +105,7 @@ public class DL4JModel {
 	    try {
 			multiLayerNetwork.save(locationToSave, saveUpdater);
 			dL4JSerializableConfiguration.saveSerializable(filePath.replace(".zip", ".ser"));
-		} catch (IOException e) {
+		} catch (IOException | IllegalStateException e) {
 			dialogs.exception("Cannot save model:\n" + filePath, e);
 		}
 	}
@@ -118,7 +123,7 @@ public class DL4JModel {
 			dL4JSerializableConfiguration.loadDeserializable(filePath.replace(".zip", ".ser")); 
 			if(displaySuccessDialog == true)
 				dialogs.alertDialog(AlertType.INFORMATION, "Success", "Model loaded");
-		} catch (IOException e) {
+		} catch (IOException | IllegalStateException e) {
 			dialogs.exception("Cannot load model:\n" + filePath, e);
 		}
 	}

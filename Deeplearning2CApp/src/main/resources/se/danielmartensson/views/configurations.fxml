@@ -27,7 +27,7 @@
           </Tab>
           <Tab fx:id="layerConfigurationTab" text="Layer configuration">
                <content>
-                  <CharmListView fx:id="listView" />
+                  <CharmListView fx:id="listView" floatingHeaderVisible="false" />
                </content>
           </Tab>
         </tabs>
