@@ -88,3 +88,8 @@ SimpleDependencyInjection.java <-- Class that make DL4JModel static and accessib
 Those classes handle the configurations for both the GUI and file handling. Just read them and try to understand how I have made them. I allways use the same coding style for all classes and I try to make coding easy as possible so other users can understand my code. 
 
 The idea behind Deeplearning2C is that I using Deeplearning4J and creates an interface for it. The configuration you making inside Deeplearning2C is more like a instructions how to create the deep neural network for Deeplearning4J. 
+
+
+5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual.
+
+https://docs.gluonhq.com/getting-started/#introduction
