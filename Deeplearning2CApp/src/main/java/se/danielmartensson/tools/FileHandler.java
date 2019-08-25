@@ -122,7 +122,8 @@ public class FileHandler {
 			 * Sort on date modified
 			 */
 			Arrays.sort(files, new Comparator<File>() {
-			    public int compare(File f1, File f2) {
+			    @Override
+				public int compare(File f1, File f2) {
 			        return Long.compare(f1.lastModified(), f2.lastModified());
 			    }
 			});

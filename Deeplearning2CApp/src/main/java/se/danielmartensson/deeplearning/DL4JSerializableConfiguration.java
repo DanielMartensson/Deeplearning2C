@@ -8,8 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -43,7 +41,6 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
-	private final @Getter String[] dropdownTypes = {"Layer type:", "Number inputs:", "Number outputs:", "Activation type:", "Loss function type:"};
 	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer"};
 	
 	/*
@@ -104,8 +101,9 @@ public class DL4JSerializableConfiguration implements Serializable {
 	        nOutList = dL4JSerializableConfiguration.getNOutList();
 	        activationList = dL4JSerializableConfiguration.getActivationList();
 	        lossFunctionList = dL4JSerializableConfiguration.getLossFunctionList();
-	        
-	        System.out.println("Layer size when deserialize = " + layerList.size());
+	        /*
+	         * Add more here...
+	         */
 	        
 	        /*
 	         * Close
@@ -161,22 +159,25 @@ public class DL4JSerializableConfiguration implements Serializable {
 		/*
 		 * Add the updater by checking of string updaterName contains in updaterList
 		 */
-		if(contains(updaterName, updaterList) == true) {
+		if(updaterName.equals(updaterList[0]) == true) { // Sgd
 			builder.updater(new Sgd(learningRate));
-		}else if(contains(updaterName, updaterList) == true) {
+		}else if(updaterName.equals(updaterList[1]) == true) { // Adam
 			builder.updater(new Adam(learningRate));
-		}else if(contains(updaterName, updaterList) == true) {
+		}else if(updaterName.equals(updaterList[2]) == true) { // Nesterovs
 			builder.updater(new Nesterovs(learningRate, momentum));
-		}else if(contains(updaterName, updaterList) == true) {
+		}else if(updaterName.equals(updaterList[3]) == true) { // AdaDelta
 			builder.updater(new AdaDelta());
-		}else if(contains(updaterName, updaterList) == true) {
+		}else if(updaterName.equals(updaterList[4]) == true) { // AdaMax
 			builder.updater(new AdaMax(learningRate));
 		}
+		/*
+         * Add more here...
+         */
 		
 		/*
 		 * Add regularization and its coefficient by checking if regularizationName contains inside regularizationList
 		 */
-		if(contains(regularizationName, regularizationList) == true)
+		if(regularizationName.equals(regularizationList[0]) == true) // "L1"
 			builder.l1(regularizationCoefficient);
 		else
 			builder.l2(regularizationCoefficient);
@@ -185,31 +186,33 @@ public class DL4JSerializableConfiguration implements Serializable {
 		 * Layer configuration
 		 */
 		ListBuilder listBuilder = new ListBuilder(builder);
-		System.out.println("Layer size when config = " + layerList.size());
-		for(int i = 0; i < layerList.size(); i++) 
-			if(contains(layerList.get(i), layerNames) == true) {
+		for(int i = 0; i < layerList.size(); i++) {
+			if(layerList.get(i).equals(layerNames[0]) == true) { // DenseLayer
 				listBuilder.layer(new DenseLayer.Builder()
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
 						.activation(activationList.get(i))
 						.build());
-			}else if(contains(layerList.get(i), layerNames) == true) {
+			}else if(layerList.get(i).equals(layerNames[1]) == true) { // LSTM
 				listBuilder.layer(new LSTM.Builder()
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
 						.activation(activationList.get(i))
 						.build());
-			}else if(contains(layerList.get(i), layerNames) == true) {
+			}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
 				listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
 						.nIn(nInList.get(i))
 						.nOut(nOutList.get(i))
 						.activation(activationList.get(i))
 						.build());
 			}
+			/*
+	         * Add more here...
+	         */
+		}
 		/*
 		 * Return our configuration
 		 */
-		System.out.println("Layer size after config = " + layerList.size());
 		return listBuilder; 
 	}
 	
@@ -238,15 +241,5 @@ public class DL4JSerializableConfiguration implements Serializable {
 		nOutList.clear();
 		activationList.clear();
 		lossFunctionList.clear();
-	}
-	
-	/**
-	 * Check if something contains in a array
-	 * @param inputStr
-	 * @param items
-	 * @return boolean
-	 */
-	private boolean contains(String inputStr, String[] items) {
-	    return Arrays.stream(items).parallel().anyMatch(inputStr::contains);
 	}
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.gluonhq.charm.glisten.control.CharmListView?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -14,7 +13,7 @@
         <tabs>
           <Tab fx:id="globalConfigurationTab" text="Global configuration">
                <content>
-                  <TableView fx:id="tableView" prefHeight="200.0" prefWidth="200.0">
+                  <TableView fx:id="globalTableView" prefHeight="200.0" prefWidth="200.0">
                     <columns>
                       <TableColumn fx:id="columnConfiguration" prefWidth="-1.0" sortable="false" text="Configuration" />
                       <TableColumn fx:id="columnValue" prefWidth="-1.0" sortable="false" text="Value" />
@@ -27,7 +26,18 @@
           </Tab>
           <Tab fx:id="layerConfigurationTab" text="Layer configuration">
                <content>
-                  <CharmListView fx:id="listView" />
+                  <TableView fx:id="layerTableView" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn fx:id="layerColumn" prefWidth="49.0" text="Layer" />
+                      <TableColumn fx:id="inputColumn" prefWidth="48.0" text="Input" />
+                        <TableColumn fx:id="outputColumn" prefWidth="57.0" text="Output" />
+                        <TableColumn fx:id="activationColumn" prefWidth="44.0" text="Activation" />
+                        <TableColumn fx:id="lossFunctionColumn" prefWidth="96.0" text="Loss function" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
                </content>
           </Tab>
         </tabs>

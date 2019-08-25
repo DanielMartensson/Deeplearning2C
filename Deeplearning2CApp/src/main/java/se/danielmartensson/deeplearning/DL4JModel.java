@@ -30,7 +30,8 @@ public class DL4JModel {
 	 * DL4J
 	 */
 	private @Getter DL4JSerializableConfiguration dL4JSerializableConfiguration = new DL4JSerializableConfiguration();
-	private MultiLayerNetwork multiLayerNetwork;
+	private @Getter DL4JData dL4JData = new DL4JData();
+	private @Getter MultiLayerNetwork multiLayerNetwork;
 	private MultiLayerConfiguration multiLayerConfiguration;
 	private ListBuilder listBuilder;
 	private Builder builder;
@@ -55,15 +56,36 @@ public class DL4JModel {
 		dL4JSerializableConfiguration.setMomentum(0.01);
 		dL4JSerializableConfiguration.setRegularizationName("L1");
 		dL4JSerializableConfiguration.setRegularizationCoefficient(Math.pow(10, 0));
+		/*
+         * Add more here...
+         */
 		
 		/*
 		 * Layer configuration - We need at least ONE layer
 		 */
 		dL4JSerializableConfiguration.clearLayer();
-		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, null);
-		dL4JSerializableConfiguration.addLayer("LSTM", 3, 3, Activation.RELU, null);
-		dL4JSerializableConfiguration.addLayer("OutputLayer", 3, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD);
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("LSTM", 3, 3, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("OutputLayer", 3, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function effect this layer
+		/*
+         * Add more here...
+         */
 		
+		/*
+		 * Generate model from the configurations
+		 */
+		generateModel();
+
+	    /*
+	     * Save the model - Initial .zip file need to exist first!
+	     */   
+	    saveModel(filePath);
+	}
+	
+	/**
+	 * This will generate a model from the configuration inside DL4JSerializableConfiguration class
+	 */
+	public void generateModel() {
 		/*
 		 * Build the configuration by first create the builder for global configuration.
 		 * Then create the layers and build everything to a multilayer configuration
@@ -71,9 +93,11 @@ public class DL4JModel {
 		builder = new NeuralNetConfiguration.Builder();
 		listBuilder = dL4JSerializableConfiguration.runConfiguration(builder);
 		try {
-		multiLayerConfiguration = listBuilder.build();
+			multiLayerConfiguration = listBuilder.build();
 		} catch(IllegalStateException e) {
 			dialogs.exception("Cannot create basic model", e);
+			dL4JSerializableConfiguration.clearLayer();
+			dL4JSerializableConfiguration.setModelName(null);
 			return;
 		}
 		
@@ -83,16 +107,9 @@ public class DL4JModel {
 		multiLayerNetwork = new MultiLayerNetwork(multiLayerConfiguration);
 		
 		/*
-		 * Start model
+		 * Start model - Need to do that so we can save it
 		 */
 		multiLayerNetwork.init();
-
-	    /*
-	     * Save the model - Initial .zip file need to exist first!
-	     * Clear layers
-	     */   
-	    saveModel(filePath);
-	    dL4JSerializableConfiguration.clearLayer();
 	}
 	
 	/**

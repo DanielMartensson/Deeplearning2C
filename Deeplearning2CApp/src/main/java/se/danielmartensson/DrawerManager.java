@@ -11,6 +11,8 @@ import com.gluonhq.charm.glisten.control.NavigationDrawer.ViewItem;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import static se.danielmartensson.Main.MODELS_VIEW;
 import static se.danielmartensson.Main.CONFIGURATIONS_VIEW;
+import static se.danielmartensson.Main.DATA_VIEW;
+import static se.danielmartensson.Main.TRAINEVALGENERATE_VIEW;
 import javafx.scene.image.Image;
 import se.danielmartensson.tools.Dialogs;
 
@@ -21,14 +23,15 @@ public class DrawerManager {
     public static void buildDrawer(MobileApplication app) {
         NavigationDrawer drawer = app.getDrawer();
         
-        NavigationDrawer.Header header = new NavigationDrawer.Header("Gluon Mobile",
-                "Multi View Project",
-                new Avatar(21, new Image(DrawerManager.class.getResourceAsStream("/icon.png"))));
+        NavigationDrawer.Header header = new NavigationDrawer.Header("Deeplearning2C", "C-Code generator", new Avatar(40, new Image(DrawerManager.class.getResourceAsStream("/icon.png"))));
         drawer.setHeader(header);
         
         final Item modelsItem = new ViewItem("Models", MaterialDesignIcon.HOME.graphic(), MODELS_VIEW, ViewStackPolicy.SKIP);
         final Item configurationsItem = new ViewItem("Configurations", MaterialDesignIcon.DASHBOARD.graphic(), CONFIGURATIONS_VIEW);
-        drawer.getItems().addAll(modelsItem, configurationsItem);
+        final Item dataItem = new ViewItem("Data", MaterialDesignIcon.DATE_RANGE.graphic(), DATA_VIEW);
+        final Item trainEvalGenerateItem = new ViewItem("Train Eval Generate", MaterialDesignIcon.WORK.graphic(), TRAINEVALGENERATE_VIEW);
+
+        drawer.getItems().addAll(modelsItem, configurationsItem, dataItem, trainEvalGenerateItem);
         
         if (true) { // Used to be Platform.isDesktop()
             final Item quitItem = new Item("Quit", MaterialDesignIcon.EXIT_TO_APP.graphic());

@@ -45,7 +45,7 @@ public class ModelsPresenter {
     private Dialogs dialogs = new Dialogs();
     
     /*
-     * Injected from Spring
+     * Injected as static
      */
     private DL4JModel dL4JModel;
     
@@ -213,4 +213,6 @@ public class ModelsPresenter {
 			return; // No selected model
 		dL4JModel.loadModel(modelPath + modelName + ".zip", true);
     }
+	
+	
 }
