@@ -1,6 +1,12 @@
 ## What is this project?
 This is Deeplearning2C. It's a project for generate an application for Android, Iphone, Linux, Windows and Mac OS X, that can generate a deep neural network in a .c file after being trained with Deeplearning4J.
 
+I have been using the following dependencies
+
+* Deeplearning4J
+* GluonHQ JavaFX for Android & Iphone development
+* Lombok
+
 ## Why should I use this application?
 Let's say that you want to implement an deep neural network that are trained for classification for animals or other visible things. You want to implement it into a microcontroller such as STM32, PIC, AVR. Then this application can be used to generate a deep neural network in C code.
 
@@ -44,7 +50,6 @@ sudo apt-get install openjdk-8-jdk
 
 2. Install OpenJFX 8
 ```
-
 Open sources.list file 
 
 cd /etc/apt
