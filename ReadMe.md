@@ -59,7 +59,7 @@ Paste this into the file and save and close
 
 deb http://de.archive.ubuntu.com/ubuntu/ bionic universe
 
-Run thise code inside the terminal
+Run these code inside the terminal
 
 sudo apt-get update
 sudo apt install openjfx=8u161-b12-1ubuntu2 libopenjfx-java=8u161-b12-1ubuntu2 libopenjfx-jni=8u161-b12-1ubuntu2 openjfx-source=8u161-b12-1ubuntu2
