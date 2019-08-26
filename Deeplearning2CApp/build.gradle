@@ -34,6 +34,12 @@ jfxmobile {
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
+        targetSdkVersion = '28'
+        dexOptions {
+            additionalParameters = ['--minimal-main-dex']
+            keepRuntimeAnnotatedClasses = false
+            javaMaxHeapSize = '4g'
+        }
     }
     ios {
         infoPList = file('src/ios/Default-Info.plist')
