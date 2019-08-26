@@ -37,6 +37,11 @@ Training the model
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Training.png)
 
+
+Applied onto a Samsung S3
+
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
+
 ## I like this project, but I missing some layers and updaters. How can I implement these?
 
 First of all. To start with this project, you need to have OpenJDK 8 and OpenJFX 8 installed.

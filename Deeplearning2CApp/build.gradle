@@ -34,11 +34,34 @@ jfxmobile {
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
-        targetSdkVersion = '28'
+        targetSdkVersion = '27'
         dexOptions {
             additionalParameters = ['--minimal-main-dex']
             keepRuntimeAnnotatedClasses = false
             javaMaxHeapSize = '4g'
+        }
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/DEPENDENCIES.txt'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'LICENSE-EDL-1.0.txt'
+            exclude 'LICENSE-EPL-1.0.txt'
+            exclude 'about.html'
+            exclude 'META-INF/license.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/notice.txt'
+            exclude 'META-INF/INDEX.LIST'
+            exclude 'META-INF/services/javax.imageio.spi.ImageReaderSpi'
+            exclude 'META-INF/services/javax.imageio.spi.ImageWriterSpi'
+            exclude 'assets/org/apache/commons/math3/exception/util/LocalizedFormats_fr.properties'
+            exclude 'assets/org/apache/commons/math3/random/new-joe-kuo-6.1000'
+            exclude 'org/threeten/bp/format/ChronologyText.properties'
+            exclude 'org/threeten/bp/TZDB.dat'
+            pickFirst 'META-INF/services/org.nd4j.linalg.factory.Nd4jBackend'
+            pickFirst 'META-INF/services/org.nd4j.linalg.compression.NDArrayCompressor'
+            pickFirst 'nd4j-native.properties'
         }
     }
     ios {
