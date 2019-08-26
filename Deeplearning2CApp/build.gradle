@@ -24,6 +24,7 @@ dependencies {
     compile group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-beta4'
     compile group: 'org.datavec', name: 'datavec-api', version: '1.0.0-beta4'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
 
 jfxmobile {

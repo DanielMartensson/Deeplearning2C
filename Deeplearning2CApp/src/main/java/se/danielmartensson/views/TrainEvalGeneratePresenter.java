@@ -148,7 +148,6 @@ public class TrainEvalGeneratePresenter {
 		 * Get the data set from a random batch inside data set iteration
 		 */
 		DataSetIterator dataTrainSetIterator = dL4JModel.getDL4JData().getTrainDataSetIterator();
-		System.out.println("Has next?" + dataTrainSetIterator.hasNext());
 		DataSet dataTrainSet = dataTrainSetIterator.next();
 		
 		/*
