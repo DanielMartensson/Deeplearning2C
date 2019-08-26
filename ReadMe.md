@@ -87,8 +87,9 @@ Now you can download my Deeplearning2C project and import that project into your
 ## What need to be working on?
 
 * Make so C-code generation works. Right now it's just a empty method.  Have a look at TrainEvalGeneratePresenter.java file 
-* Generate an application for Iphone. I haven't tested it yet because I focusing on Android at the moment. 
+* Generate an application for Iphone. Iphone app generation works, but I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
+* Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
 
 ## I want to add a layer and a updater! How can I do that?
 
