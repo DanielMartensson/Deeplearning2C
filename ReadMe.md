@@ -82,9 +82,7 @@ sudo apt-mark hold libopenjfx-java libopenjfx-jni openjfx openjfx-source
 
 Now you can download my Deeplearning2C project and import that project into your Eclipse IDE. 
 
-5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc.
-
-https://docs.gluonhq.com/getting-started/#introduction
+5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
 
 ## I want to add a layer and a updater! How can I do that?
 
