@@ -42,10 +42,9 @@ Applied onto a Samsung Galaxy S3 from 2012
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
 
-## I like this project, but I missing some layers and updaters. How can I implement these?
+## I like this project! How can I get the installation file?
 
-First of all. To start with this project, you need to have OpenJDK 8 and OpenJFX 8 installed.
-If you are an Ubuntu user, then follow these steps:
+First of all. The installation file is over 600 megabytes. That's huge, but anyway it's still possible to install. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
 
 1. Install OpenJDK 8
 
@@ -82,7 +81,14 @@ sudo apt-mark hold libopenjfx-java libopenjfx-jni openjfx openjfx-source
 ```
 
 Now you can download my Deeplearning2C project and import that project into your Eclipse IDE. 
-After you have done that, you need to focus on three java classes.
+
+5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc.
+
+https://docs.gluonhq.com/getting-started/#introduction
+
+## I want to add a layer and a updater! How can I do that?
+
+After you have installed all the tools you need to create the installation files, such as .jar, .apk etc. you need to focus on these three java classes.
 
 ```
 ConfigurationsPresenter.java <-- For configuration GUI
@@ -95,6 +101,4 @@ Those classes handle the configurations for both the GUI and file handling. Just
 The idea behind Deeplearning2C is that I using Deeplearning4J and creates an interface for it. The configuration you making inside Deeplearning2C is more like a instructions how to create the deep neural network for Deeplearning4J. 
 
 
-5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual.
 
-https://docs.gluonhq.com/getting-started/#introduction
