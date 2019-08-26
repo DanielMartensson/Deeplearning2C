@@ -84,6 +84,12 @@ Now you can download my Deeplearning2C project and import that project into your
 
 5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
 
+## What need to be working on?
+
+* Make so C-code generation works. Right now it's just a empty method. 
+* Generate an application for Iphone. I haven't tested it yet because I focusing on Android at the moment. 
+* Search for bugs. If you find any...please open an issue or a pull request. 
+
 ## I want to add a layer and a updater! How can I do that?
 
 After you have installed all the tools you need to create the installation files, such as .jar, .apk etc. you need to focus on these three java classes.
