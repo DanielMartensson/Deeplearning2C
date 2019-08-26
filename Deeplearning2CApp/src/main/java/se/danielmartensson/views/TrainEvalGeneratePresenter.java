@@ -106,6 +106,9 @@ public class TrainEvalGeneratePresenter {
 		
     }
 
+    /**
+     * This method will generate C-code
+     */
 	private void generateCCode() {
 		/*
 		 * Do a quick check!

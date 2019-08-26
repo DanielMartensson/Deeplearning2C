@@ -86,7 +86,7 @@ Now you can download my Deeplearning2C project and import that project into your
 
 ## What need to be working on?
 
-* Make so C-code generation works. Right now it's just a empty method. 
+* Make so C-code generation works. Right now it's just a empty method.  Have a look at TrainEvalGeneratePresenter.java file 
 * Generate an application for Iphone. I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 
@@ -104,5 +104,5 @@ Those classes handle the configurations for both the GUI and file handling. Just
 
 The idea behind Deeplearning2C is that I using Deeplearning4J and creates an interface for it. The configuration you making inside Deeplearning2C is more like a instructions how to create the deep neural network for Deeplearning4J. 
 
-
+Please, use also SceneBuilder 8 from GluonHQ. An easy tool for creating or editing the *.fxml files inside the resources folder that are located inside the Deeplearning2C project.
 
