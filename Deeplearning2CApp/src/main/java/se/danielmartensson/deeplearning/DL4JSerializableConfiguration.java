@@ -136,8 +136,6 @@ public class DL4JSerializableConfiguration implements Serializable {
 			objectOutputStream.writeObject(this); // All fields
 			objectOutputStream.close();
 			fileOutputStream.close();
-			
-			System.out.println("Layer size when serialize = " + layerList.size());
 		} catch (IOException e) {
 			new Dialogs().exception("Cannot write ser file:\n" + filePath, e);
 		}

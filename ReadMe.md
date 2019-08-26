@@ -80,9 +80,11 @@ sudo apt-mark hold libopenjfx-java libopenjfx-jni openjfx openjfx-source
   Help -> Eclipse Marketplace -> Gluon 2.6.0
 ```
 
-Now you can download my Deeplearning2C project and import that project into your Eclipse IDE. 
+Now you can download my Deeplearning2C project and import that project into your Eclipse IDE.  Have fun and generate the .jar file for Win,Lin,Mac. 
 
-5. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
+5. (Optional) See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
+
+6. (Optional) Troubleshooting for Android can be done this way, if you got some issues with the application on the phone, but not on desktop. See selected answer https://stackoverflow.com/questions/42253794/androidinstall-task-causes-a-no-connected-devices-error
 
 ## What need to be working on?
 
