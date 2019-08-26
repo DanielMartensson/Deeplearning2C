@@ -38,7 +38,7 @@ Training the model
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Training.png)
 
 
-Applied onto a Samsung S3
+Applied onto a Samsung Galaxy S3 from 2012
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
 
