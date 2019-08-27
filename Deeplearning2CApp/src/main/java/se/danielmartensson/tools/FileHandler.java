@@ -1,6 +1,8 @@
 package se.danielmartensson.tools;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -146,5 +148,25 @@ public class FileHandler {
 			return 0; // No files
 		else
 			return files.length;
+	}
+	
+	/**
+	 * Use this if you want to write text to a file. This method create the file automatically
+	 * write to it and then close it. This WILL overwrite existing text. Not append!
+	 * @param absolutPath Our path such as "/Deeplearning2CStorage/folder/anotherfolder/fileName.txt"
+	 * @param text This can be a long string
+	 * @return boolean 
+	 */
+	public boolean writeTextTo(String absolutPath, String text) {
+		try {
+			createNewFile(absolutPath, true);
+			BufferedWriter bufferWriter = new BufferedWriter(new FileWriter(loadNewFile(absolutPath)));
+			bufferWriter.write(text);
+			bufferWriter.close();
+			return true;
+		} catch (IOException e) {
+			dialogs.exception("Cannot write file:\n" + absolutPath, e);
+			return false;
+		}
 	}
 }

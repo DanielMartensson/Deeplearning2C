@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import org.deeplearning4j.exception.DL4JInvalidConfigException;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
@@ -184,30 +186,35 @@ public class DL4JSerializableConfiguration implements Serializable {
 		 * Layer configuration
 		 */
 		ListBuilder listBuilder = new ListBuilder(builder);
-		for(int i = 0; i < layerList.size(); i++) {
-			if(layerList.get(i).equals(layerNames[0]) == true) { // DenseLayer
-				listBuilder.layer(new DenseLayer.Builder()
-						.nIn(nInList.get(i))
-						.nOut(nOutList.get(i))
-						.activation(activationList.get(i))
-						.build());
-			}else if(layerList.get(i).equals(layerNames[1]) == true) { // LSTM
-				listBuilder.layer(new LSTM.Builder()
-						.nIn(nInList.get(i))
-						.nOut(nOutList.get(i))
-						.activation(activationList.get(i))
-						.build());
-			}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
-				listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
-						.nIn(nInList.get(i))
-						.nOut(nOutList.get(i))
-						.activation(activationList.get(i))
-						.build());
+		try {
+			for(int i = 0; i < layerList.size(); i++) {
+				if(layerList.get(i).equals(layerNames[0]) == true) { // DenseLayer
+					listBuilder.layer(new DenseLayer.Builder()
+							.nIn(nInList.get(i))
+							.nOut(nOutList.get(i))
+							.activation(activationList.get(i))
+							.build());
+				}else if(layerList.get(i).equals(layerNames[1]) == true) { // LSTM
+					listBuilder.layer(new LSTM.Builder()
+							.nIn(nInList.get(i))
+							.nOut(nOutList.get(i))
+							.activation(activationList.get(i))
+							.build());
+				}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
+					listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
+							.nIn(nInList.get(i))
+							.nOut(nOutList.get(i))
+							.activation(activationList.get(i))
+							.build());
+				}
 			}
+		}catch(DL4JInvalidConfigException e) {
+			new Dialogs().exception("Layer configuration error", e);
+		}
 			/*
 	         * Add more here...
 	         */
-		}
+		
 		/*
 		 * Return our configuration
 		 */

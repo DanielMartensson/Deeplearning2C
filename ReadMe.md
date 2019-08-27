@@ -6,6 +6,7 @@ I have been using the following dependencies
 * Deeplearning4J
 * GluonHQ JavaFX for Android & Iphone development
 * Lombok
+* Logback-classic
 
 ## Why should I use this application?
 Let's say that you want to implement an deep neural network that are trained for classification for animals or other visible things. You want to implement it into a microcontroller such as STM32, PIC, AVR. Then this application can be used to generate a deep neural network in C code.
@@ -88,7 +89,7 @@ Now you can download my Deeplearning2C project and import that project into your
 
 ## What need to be working on?
 
-* Make so C-code generation works. Right now it's just a empty method.  Have a look at TrainEvalGeneratePresenter.java file 
+* Make so C-code generation works. I have just getting header files to work.  Have a look at TrainEvalGeneratePresenter.java file 
 * Generate an application for Iphone. Iphone app generation works, but I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 * Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
