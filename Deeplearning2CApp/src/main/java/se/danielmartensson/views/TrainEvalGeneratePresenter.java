@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.deeplearning4j.exception.DL4JException;
@@ -133,7 +134,13 @@ public class TrainEvalGeneratePresenter {
 		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
 		LocalDateTime localDateTime = LocalDateTime.now();  
 		String creationDate = dateTimeFormatter.format(localDateTime);
-				
+		
+		/*
+		 * Get table
+		 */
+		Map<String, INDArray> weights = dL4JModel.getMultiLayerNetwork().paramTable();
+		Set<String> weightsName = weights.keySet();
+		
 		/*
 		 * Write header file
 		 */
@@ -161,9 +168,22 @@ public class TrainEvalGeneratePresenter {
 		 */
 		String include = "#include " + modelName + ".h\n\n";
 		String functionStart = "void " + modelName + "(float* input, float* output){\n";
-		
+		String arrays = "";
+		for(String weightName : weightsName) {
+			INDArray selectedWeight = weights.get(weightName);
+			int totalRows = selectedWeight.rows();
+			int totalColumns = selectedWeight.columns();
+			arrays += "\tconst float " + new StringBuilder(weightName).reverse().toString() + "["+totalRows+"]["+totalColumns+"]=";
+			String firstPart = selectedWeight.toString().replace("[", "{"); // Just replace [ to { and ] to } and we got a C-array!
+			String secondPart = firstPart.replace("]", "}");
+			arrays += secondPart.replace("\n", "\n\t\t\t\t\t\t   "); // This like make the matrices symmetrical
+			arrays += ";\n\n";
+		}
+		String functionEnd = "}";
 		absolutPath = cPath + modelName + ".c";
-		Map<String, INDArray> table = dL4JModel.getMultiLayerNetwork().paramTable();
+		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + arrays + functionEnd);
+
+		
 		
 		
 	}

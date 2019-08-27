@@ -19,7 +19,7 @@ public class DL4JThread extends Thread{
 	private int epochs;
 	private DataSetIterator trainDataSetIterator;
 	private TextArea textArea;
-	private int i;
+	private int progressBarPosition;
 	private String[] textWall = new String[31]; // 31 elements
 	
 	/**
@@ -45,13 +45,13 @@ public class DL4JThread extends Thread{
 		/*
 		 * Initial counters
 		 */
-		i = 1;
+		progressBarPosition = 1;
 		int rowCounter = 0;
 		
 		/*
 		 * While loop for training
 		 */
-		while(i < epochs+1) {
+		while(progressBarPosition < epochs+1) {
 			/*
 			 * If we press stop or let the for loop do its full iterations
 			 */
@@ -79,13 +79,13 @@ public class DL4JThread extends Thread{
 				/*
 				 * Get the score and add it to the last element
 				 */
-				String rowLine = "Epoch = " + i + " Score = " + multiLayerNetwork.score();
+				String rowLine = "Epoch = " + progressBarPosition + " Score = " + multiLayerNetwork.score();
 				for(int j = 0; j < textWall.length-1; j++) 
 					textWall[j] = textWall[j+1]; // Shift
 				textWall[textWall.length-1] = rowLine; // Last
 				Platform.runLater(() -> textArea.setText(String.join("\n", textWall))); 
 			}else {
-				String rowLine = "Epoch = " + i + " Score = " + multiLayerNetwork.score();
+				String rowLine = "Epoch = " + progressBarPosition + " Score = " + multiLayerNetwork.score();
 				textWall[rowCounter] = rowLine;
 				Platform.runLater(() -> textArea.appendText(rowLine + "\n")); 
 				rowCounter++;
@@ -94,15 +94,15 @@ public class DL4JThread extends Thread{
 			/*
 			 * Our progress bar
 			 */
-			Platform.runLater(() -> progressBar.setProgress(Double.valueOf(i)/Double.valueOf(epochs)));
+			Platform.runLater(() -> progressBar.setProgress(Double.valueOf(progressBarPosition)/Double.valueOf(epochs)));
 			
 			/*
 			 * Break statement 
 			 */
-			if(i >= epochs)
+			if(progressBarPosition >= epochs)
 				break;
 			else
-				i++; // I use a while-loop due to the Platform.RunLater cannot take variable i as a local variable.
+				progressBarPosition++; // I use a while-loop due to the Platform.RunLater cannot take variable i as a local variable.
 		}
 		
 		/*
