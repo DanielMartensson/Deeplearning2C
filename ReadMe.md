@@ -110,4 +110,8 @@ The idea behind Deeplearning2C is that I using Deeplearning4J and creates an int
 
 Please, use also SceneBuilder 8 from GluonHQ. An easy tool for creating or editing the *.fxml files inside the resources folder that are located inside the Deeplearning2C project.
 
-* Look at the folder "Tutorials"
+## Tutorials - If you want to change inside the code
+* Tutorials -> Add seed, regularization coefficient, learning rate, momentum
+* Tutorials -> Add new updater
+* Tutorials -> Add new layer
+* Tutorials -> Add inputs and outputs
