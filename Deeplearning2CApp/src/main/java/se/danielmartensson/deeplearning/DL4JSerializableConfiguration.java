@@ -201,14 +201,14 @@ public class DL4JSerializableConfiguration implements Serializable {
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))
 							.build());
-				}else if(layerList.get(i).equals(layerNames[1]) == true) { // RnnOutputLayer
-					listBuilder.layer(new RnnOutputLayer.Builder(lossFunctionList.get(i))
+				}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
+					listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
 							.nIn(nInList.get(i))
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))
 							.build());
-				}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
-					listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
+				}else if(layerList.get(i).equals(layerNames[3]) == true) { // RnnOutputLayer
+					listBuilder.layer(new RnnOutputLayer.Builder(lossFunctionList.get(i))
 							.nIn(nInList.get(i))
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))
