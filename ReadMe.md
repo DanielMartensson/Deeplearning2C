@@ -90,25 +90,28 @@ Now you can download my Deeplearning2C project and import that project into your
 ## What need to be working on?
 
 * Make so C-code generation works. I have just getting header files to work.  Have a look at TrainEvalGeneratePresenter.java file 
-* Generate an application for Iphone. Iphone app generation works, but I haven't tested it yet because I focusing on Android at the moment. 
+* Generate an application for Iphone. Iphone app generation works for this project, but I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 * Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
 
-## I want to add a layer and a updater! How can I do that?
+## How is the project organized?
 
-After you have installed all the tools you need to create the installation files, such as .jar, .apk etc. you need to focus on these three java classes.
+* DrawerManager.java -> Handles the menu slide to the left
+* Main.java -> Handles the import of new JavaFX pages
+* DL4JData.java -> Handles everything that has to do with CSV handling for DL4J
+* DL4JModel.java -> Hnaldes everything that has to do with the model (save, load, generate etc.)
+* DL4JSerializableConfiguration.java -> Handles saving and loading layers and global config to .ser files
+* DL4JThread.java -> Handles training and using the text area and progress bar inside the TrainEvalGeneratePresenter.java file
+* Dialogs.java -> Handles everything that has to do with pop-up dialogs
+* FileHandler.java -> Handles file system, write files, read files and create files
+* SimpleDependencyInjection.java -> Create a static object of DL4JModel.java so we can have access to DL4JModel everywhere
+* ConfigurationsPresenter.java -> Handles GUI view for configuration
+* DataPresenter.java -> Handles the GUI view for CSV import
+* ModelsPresenter.java -> Handles the GUI view for model creation and delete/save
+* TrainEvalGeneratePresenter.java -> Handles the GUI view for train, eval and generate C-code
 
-```
-ConfigurationsPresenter.java <-- For configuration GUI
-DL4JSerializableConfiguration.java <-- For creating the deep neural network
-SimpleDependencyInjection.java <-- Class that make DL4JModel static and accessible for all classes
-```
+Every file inside se.danielmartensson.views package that contains the word "View" inside its name is only for importing the GUI inside Main.java file. Those files never changes.
 
-Those classes handle the configurations for both the GUI and file handling. Just read them and try to understand how I have made them. I allways use the same coding style for all classes and I try to make coding easy as possible so other users can understand my code. 
-
-The idea behind Deeplearning2C is that I using Deeplearning4J and creates an interface for it. The configuration you making inside Deeplearning2C is more like a instructions how to create the deep neural network for Deeplearning4J. 
-
-Please, use also SceneBuilder 8 from GluonHQ. An easy tool for creating or editing the *.fxml files inside the resources folder that are located inside the Deeplearning2C project.
 
 ## Tutorials - If you want to change inside the code
 * Tutorials -> Add seed, regularization coefficient, learning rate, momentum
