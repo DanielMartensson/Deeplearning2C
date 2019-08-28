@@ -96,6 +96,7 @@ Now you can download my Deeplearning2C project and import that project into your
 * The view need to be better done. Sometimes, I can't even see the progress bar. Please use SceneBulilder 8 for that. 
 
 ## How is the project organized?
+I have always like clean god written code and pedagogy explanations. So I'm going to give you an introduction what every file do. I like to keep files as short as possible. Around 250-300 lines per each java file is a suitable java file. 
 
 * DrawerManager.java -> Handles the menu slide to the left
 * Main.java -> Handles the import of new JavaFX pages
