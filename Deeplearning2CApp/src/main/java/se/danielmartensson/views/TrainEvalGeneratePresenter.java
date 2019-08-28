@@ -246,25 +246,30 @@ public class TrainEvalGeneratePresenter {
 		 * Do we have regression or classification data?
 		 */
 		boolean regression = dL4JModel.getDL4JData().isRegression();
-		if(regression == true) {
-			/*
-			 * Do a test for regression and print it out
-			 */
-			regressionEvaluation = multiLayerNetwork.evaluateRegression(dataTrainSetIterator);
-			INDArray output = multiLayerNetwork.output(dataTrainSet.getFeatures());
-			regressionEvaluation.eval(dataTrainSet.getLabels(), output);
-			String status = regressionEvaluation.stats();
-			textArea.setText(status);
-		}else {
-			/*
-			 * Do a test for classification and print it out 
-			 */
-			evaluation = multiLayerNetwork.evaluate(dataTrainSetIterator);
-			INDArray output = multiLayerNetwork.output(dataTrainSet.getFeatures());
-			evaluation.eval(dataTrainSet.getLabels(), output);
-			String status = evaluation.stats();
-			textArea.setText(status);
+		try {
+			if(regression == true) {
+				/*
+				 * Do a test for regression and print it out
+				 */
+				regressionEvaluation = multiLayerNetwork.evaluateRegression(dataTrainSetIterator);
+				INDArray output = multiLayerNetwork.output(dataTrainSet.getFeatures());
+				regressionEvaluation.eval(dataTrainSet.getLabels(), output);
+				String status = regressionEvaluation.stats();
+				textArea.setText(status);
+			}else {
+				/*
+				 * Do a test for classification and print it out 
+				 */
+				evaluation = multiLayerNetwork.evaluate(dataTrainSetIterator);
+				INDArray output = multiLayerNetwork.output(dataTrainSet.getFeatures());
+				evaluation.eval(dataTrainSet.getLabels(), output);
+				String status = evaluation.stats();
+				textArea.setText(status);
+			}
+		}catch(IllegalStateException | IllegalArgumentException e) {
+			dialogs.exception("Cannot evaluate the model.", e);
 		}
+		
 	}
 
 	/**
@@ -289,7 +294,10 @@ public class TrainEvalGeneratePresenter {
 		 */
 		int epochs = 0;
 		try {
-			epochs = Integer.parseInt(dialogs.input("Epochs", "Enter (int)epochs for training?"));
+			String epochsString = dialogs.input("Epochs", "Enter (int)epochs for training?");
+			if(epochsString.equals("") == true) // This will prevent so if we press "cancel", nothing happens else than the dialog disappear
+				return; 
+			epochs = Integer.parseInt(epochsString);
 			if(epochs < 0) {
 				dialogs.alertDialog(AlertType.INFORMATION, "Zero", "You cannot have 0 epochs!");
 				return;
