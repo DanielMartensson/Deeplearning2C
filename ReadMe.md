@@ -110,7 +110,7 @@ Now you can download my Deeplearning2C project and import that project into your
 * ModelsPresenter.java -> Handles the GUI view for model creation and delete/save
 * TrainEvalGeneratePresenter.java -> Handles the GUI view for train, eval and generate C-code
 
-Every file inside se.danielmartensson.views package that contains the word "View" inside its name is only for importing the GUI inside Main.java file. Those files never changes.
+Every file inside se.danielmartensson.views package that contains the word "View" inside its name is only for importing the GUI inside Main.java file. These files never changes.
 
 
 ## Tutorials - If you want to change inside the code
