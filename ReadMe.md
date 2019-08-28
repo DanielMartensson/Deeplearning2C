@@ -93,6 +93,7 @@ Now you can download my Deeplearning2C project and import that project into your
 * Generate an application for Iphone. Iphone app generation works for this project, but I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 * Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
+* The view need to be better done. Sometimes, I can't even see the progress bar. Please use SceneBulilder 8 for that. 
 
 ## How is the project organized?
 
