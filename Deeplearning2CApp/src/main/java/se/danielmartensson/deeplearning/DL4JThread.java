@@ -66,7 +66,7 @@ public class DL4JThread extends Thread{
 			 */
 			try {
 				multiLayerNetwork.fit(trainDataSetIterator);
-			}catch(DL4JException e) {
+			}catch(DL4JException | IllegalStateException e) {
 				Platform.runLater(() -> textArea.setText(e.getMessage())); 
 				endMessage = "\nStatus: Training fail...";
 				break;

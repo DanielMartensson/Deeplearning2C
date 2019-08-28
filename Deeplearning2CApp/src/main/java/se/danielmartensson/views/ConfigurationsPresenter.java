@@ -200,20 +200,20 @@ public class ConfigurationsPresenter {
            	DropdownButton layerType = new DropdownButton();
             layerType.getItems().add(new MenuItem(layerList.get(i))); // Add the selected item
             for(String layerName : layerNames) // Loop all layer names such as DenseLayer, OutputLayer, LSTM etc.
-            	if(layerList.get(i).equals(layerName) == false) // Check if we have allready insert the first selected?
+            	if(layerList.get(i).equals(layerName) == false) // Check if we have already insert the first selected?
             		layerType.getItems().add(new MenuItem(layerName)); // Nope! Add!
            	/*
            	 * Do the same for the rest
            	 */
             DropdownButton nIn = new DropdownButton();
            	nIn.getItems().add(new MenuItem(nInList.get(i).toString()));
-           	for(int k = 1; k <= 100; k++)
+           	for(int k = 1; k <= 1000; k++)
           		if(nInList.get(i) != k)
            			nIn.getItems().add(new MenuItem(String.valueOf(k)));
            			
         	DropdownButton nOut = new DropdownButton();
          	nOut.getItems().add(new MenuItem(nOutList.get(i).toString()));
-           	for(int k = 1; k <= 100; k++)
+           	for(int k = 1; k <= 1000; k++)
            		if(nOutList.get(i) != k)
            			nOut.getItems().add(new MenuItem(String.valueOf(k)));
             		
@@ -391,13 +391,14 @@ public class ConfigurationsPresenter {
 				seedDropdown.getItems().add(new MenuItem(String.valueOf(100 + i*100)));
 			
 			if((Double.valueOf(Math.pow(10, -i))).equals(dL4JSerializableConfiguration.getRegularizationCoefficient()) == false)
-				regularizationCoefficientDropdown.getItems().add(new MenuItem(String.valueOf(Math.pow(10, -i))));
+				regularizationCoefficientDropdown.getItems().add(new MenuItem(String.valueOf(Math.pow(10, -i))));		
+    	}
+		for(int i = 0; i < 500; i++) {
+			if((Double.valueOf(0.0001 + 0.002*i)).equals(dL4JSerializableConfiguration.getLearningRate()) == false)
+				learningRateDropdown.getItems().add(new MenuItem(String.valueOf(0.0001 + 0.002*i)));
 			
-			if((Double.valueOf(0.001 + 0.02*i)).equals(dL4JSerializableConfiguration.getLearningRate()) == false)
-				learningRateDropdown.getItems().add(new MenuItem(String.valueOf(0.001 + 0.02*i)));
-			
-			if((Double.valueOf(0.001 + 0.02*i)).equals(dL4JSerializableConfiguration.getMomentum()) == false)
-	    		momentumDropdown.getItems().add(new MenuItem(String.valueOf(0.001 + 0.02*i)));			
+			if((Double.valueOf(0.0001 + 0.002*i)).equals(dL4JSerializableConfiguration.getMomentum()) == false)
+	    		momentumDropdown.getItems().add(new MenuItem(String.valueOf(0.0001 + 0.002*i)));			
     	}
     	
     	/*

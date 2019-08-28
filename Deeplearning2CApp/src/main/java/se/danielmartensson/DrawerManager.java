@@ -35,11 +35,11 @@ public class DrawerManager {
         
         if (true) { // Used to be Platform.isDesktop()
             final Item quitItem = new Item("Quit", MaterialDesignIcon.EXIT_TO_APP.graphic());
-            quitItem.selectedProperty().addListener((obs, ov, nv) -> {
-                if (nv) {
+            quitItem.selectedProperty().addListener((obs, oldValue, newValue) -> {
+            	if (newValue)
                 	if(diaglogs.question("Quit", "Do you want to exit?") == true)
                 		Services.get(LifecycleService.class).ifPresent(LifecycleService::shutdown);
-                }
+                
             });
             drawer.getItems().add(quitItem);
         }

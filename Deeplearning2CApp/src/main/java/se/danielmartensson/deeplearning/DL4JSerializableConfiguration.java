@@ -22,6 +22,7 @@ import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.learning.config.AdaDelta;
 import org.nd4j.linalg.learning.config.AdaMax;
 import org.nd4j.linalg.learning.config.Adam;
+import org.nd4j.linalg.learning.config.Nadam;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.learning.config.Sgd;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
@@ -41,7 +42,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	/*
 	 * List of strings - Change these? Then you need to change the if-statements in method runConfiguration(Builder builder) below
 	 */
-	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta"};
+	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta", "Nadam"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
 	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer", "RnnOutputLayer"};
@@ -170,6 +171,8 @@ public class DL4JSerializableConfiguration implements Serializable {
 			builder.updater(new AdaDelta());
 		}else if(updaterName.equals(updaterList[4]) == true) { // AdaMax
 			builder.updater(new AdaMax(learningRate));
+		}else if(updaterName.equals(updaterList[5]) == true) { // Nadam
+			builder.updater(new Nadam(learningRate));
 		}
 		/*
          * Add more here...
