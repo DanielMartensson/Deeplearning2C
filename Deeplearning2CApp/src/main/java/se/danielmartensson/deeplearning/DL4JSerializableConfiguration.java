@@ -16,6 +16,7 @@ import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
 import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
+import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.learning.config.AdaDelta;
@@ -43,7 +44,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
-	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer"};
+	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer", "RnnOutputLayer"};
 	
 	/*
 	 * Global configuration
@@ -196,6 +197,12 @@ public class DL4JSerializableConfiguration implements Serializable {
 							.build());
 				}else if(layerList.get(i).equals(layerNames[1]) == true) { // LSTM
 					listBuilder.layer(new LSTM.Builder()
+							.nIn(nInList.get(i))
+							.nOut(nOutList.get(i))
+							.activation(activationList.get(i))
+							.build());
+				}else if(layerList.get(i).equals(layerNames[1]) == true) { // RnnOutputLayer
+					listBuilder.layer(new RnnOutputLayer.Builder(lossFunctionList.get(i))
 							.nIn(nInList.get(i))
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))

@@ -35,7 +35,7 @@ jfxmobile {
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
-        targetSdkVersion = '27'
+        targetSdkVersion = '28'
         dexOptions {
             additionalParameters = ['--minimal-main-dex']
             keepRuntimeAnnotatedClasses = false

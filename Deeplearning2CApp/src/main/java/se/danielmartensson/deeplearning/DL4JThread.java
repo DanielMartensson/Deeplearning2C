@@ -3,6 +3,7 @@ package se.danielmartensson.deeplearning;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.deeplearning4j.exception.DL4JException;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
@@ -20,6 +21,7 @@ public class DL4JThread extends Thread{
 	private DataSetIterator trainDataSetIterator;
 	private TextArea textArea;
 	private int progressBarPosition;
+	private String endMessage;
 	private String[] textWall = new String[31]; // 31 elements
 	
 	/**
@@ -47,6 +49,7 @@ public class DL4JThread extends Thread{
 		 */
 		progressBarPosition = 1;
 		int rowCounter = 0;
+		endMessage = "\nStatus: Training done...";
 		
 		/*
 		 * While loop for training
@@ -61,7 +64,13 @@ public class DL4JThread extends Thread{
 			/*
 			 * Train
 			 */
-			multiLayerNetwork.fit(trainDataSetIterator);
+			try {
+				multiLayerNetwork.fit(trainDataSetIterator);
+			}catch(DL4JException e) {
+				Platform.runLater(() -> textArea.setText(e.getMessage())); 
+				endMessage = "\nStatus: Training fail...";
+				break;
+			}
 			
 			/*
 			 * Delay is needed, else we might lose some icons inside the appBar
@@ -106,8 +115,8 @@ public class DL4JThread extends Thread{
 		}
 		
 		/*
-		 * Done!
+		 * Print the status message
 		 */
-		Platform.runLater(() -> textArea.appendText("\nSuccess: Training done...."));
+		Platform.runLater(() -> textArea.appendText(endMessage));
 	}
 }

@@ -6,18 +6,12 @@ import com.gluonhq.charm.glisten.control.ProgressBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.deeplearning4j.exception.DL4JException;
-import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
@@ -164,7 +158,7 @@ public class TrainEvalGeneratePresenter {
 		fileHandler.writeTextTo(absolutPath, comment + ifndef + define + function + endif);
 		
 		/*
-		 * Write .c file now
+		 * Write .c file now - Begin to write down the matrices and vectors
 		 */
 		String include = "#include " + modelName + ".h\n\n";
 		String functionStart = "void " + modelName + "(float* input, float* output){\n";
@@ -173,15 +167,38 @@ public class TrainEvalGeneratePresenter {
 			INDArray selectedWeight = weights.get(weightName);
 			int totalRows = selectedWeight.rows();
 			int totalColumns = selectedWeight.columns();
-			arrays += "\tconst float " + new StringBuilder(weightName).reverse().toString() + "["+totalRows+"]["+totalColumns+"]=";
+			String arrayName = new StringBuilder(weightName).reverse().toString(); 
+			arrays += "\tconst float " + arrayName + "["+totalRows+"]["+totalColumns+"]=";
 			String firstPart = selectedWeight.toString().replace("[", "{"); // Just replace [ to { and ] to } and we got a C-array!
 			String secondPart = firstPart.replace("]", "}");
 			arrays += secondPart.replace("\n", "\n\t\t\t\t\t\t   "); // This like make the matrices symmetrical
 			arrays += ";\n\n";
 		}
+		/*
+		 * Now write the special functions
+		 */
+		String layerFunctions = "";
+		int i = 0;
+		for(String weightName : weightsName) {
+			INDArray selectedWeight = weights.get(weightName);
+			int totalRows = selectedWeight.rows();
+			int totalColumns = selectedWeight.columns();
+			String arrayName = new StringBuilder(weightName).reverse().toString();
+			if(i == 0) {
+				layerFunctions += "\tfloat z"+i+"[" + totalColumns + "] = {0};\n";
+				layerFunctions += "\tlayer(z"+i + ", " + totalColumns + ", " + arrayName + ", input); // First layer\n"; 
+			}else if(i == weightsName.size()-1) {
+				layerFunctions += "\tlayer(output, " + totalColumns + ", " + arrayName + ", z"+(i-1)+"); // Last layer\n"; 
+			}else {
+				layerFunctions += "\tfloat z"+i+"[" + totalColumns + "] = {0};\n";
+				layerFunctions += "\tlayer(z"+i + ", " + totalColumns + ", " + arrayName + ", z"+(i-1) + ");\n"; 
+			}
+			i++;
+		}
+		
 		String functionEnd = "}";
 		absolutPath = cPath + modelName + ".c";
-		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + arrays + functionEnd);
+		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + arrays + layerFunctions + functionEnd);
 
 		
 		
@@ -291,12 +308,7 @@ public class TrainEvalGeneratePresenter {
 		DL4JThread dL4JThread = new DL4JThread(dL4JModel.getMultiLayerNetwork(), dL4JModel.getDL4JData().getTrainDataSetIterator(), textArea, progressBar, continueLoop, epochs);
 		appBar.getActionItems().remove(0);
 		appBar.getActionItems().add(0, MaterialDesignIcon.STOP.button(e -> stopTrain()));
-		try {
-			dL4JThread.start();
-		}catch(DL4JException | IllegalStateException | NullPointerException e) {
-			dialogs.exception("Cannot train model", e);
-		}
-		
+		dL4JThread.start();
 	}
 
 	/**
