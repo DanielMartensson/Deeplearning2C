@@ -43,7 +43,7 @@ Applied onto a Samsung Galaxy S3 from 2012
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
 
-This is how a C-code generation example looks like.
+This is how a C-code generation example looks like for a DenseLayer
 
 ```
 /*
@@ -86,7 +86,7 @@ void MnistNetwork(float* input, float* output){
 	real W0[4*3]={   -0.0941,    0.5298,    0.1350, 
 			  0.4098,   -0.1581,   -0.2768, 
 			  0.1868,   -0.0455,   -0.4475, 
-			   0.6364,   -0.0308,    0.0176};
+			  0.6364,   -0.0308,    0.0176};
 	m = 3;
 	n = 4;
 	sgemv_(&trans, &m, &n, &alpha, W0, &m, input, &incx, &beta, b0, &incy); // Layer - first - index 0

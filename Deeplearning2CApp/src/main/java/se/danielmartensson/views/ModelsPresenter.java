@@ -3,8 +3,6 @@ package se.danielmartensson.views;
 import java.io.File;
 import java.io.IOException;
 
-import static java.nio.file.StandardCopyOption.*;
-
 import com.gluonhq.charm.glisten.animation.BounceInRightTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
