@@ -62,6 +62,9 @@ public class ConfigurationsPresenter {
     private TableColumn<LayerConfigurationTable, DropdownButton> lossFunctionColumn;
     
     @FXML
+    private TableColumn<LayerConfigurationTable, DropdownButton> dropOutProbabilityColumn;
+    
+    @FXML
     private Tab globalConfigurationTab;
     
     @FXML
@@ -161,8 +164,10 @@ public class ConfigurationsPresenter {
         outputColumn.setCellValueFactory(new PropertyValueFactory<LayerConfigurationTable, DropdownButton>("nOut"));
         activationColumn.setCellValueFactory(new PropertyValueFactory<LayerConfigurationTable, DropdownButton>("activationType"));
         lossFunctionColumn.setCellValueFactory(new PropertyValueFactory<LayerConfigurationTable, DropdownButton>("lossFunctionType"));
+        dropOutProbabilityColumn.setCellValueFactory(new PropertyValueFactory<LayerConfigurationTable, DropdownButton>("dropOutProbability"));
         listForLayerTable = FXCollections.observableArrayList();
         layerTableView.setItems(listForLayerTable);
+        
         
         /*
     	 * Get the configuration and layers
@@ -189,6 +194,7 @@ public class ConfigurationsPresenter {
         ArrayList<Integer> nOutList = dL4JSerializableConfiguration.getNOutList();
         ArrayList<Activation> activationList = dL4JSerializableConfiguration.getActivationList();
         ArrayList<LossFunctions.LossFunction> lossFunctionList = dL4JSerializableConfiguration.getLossFunctionList();
+        ArrayList<Double> dropOutProbabilityList = dL4JSerializableConfiguration.getDropOutProbabilityList();
     	
         /*
          * Loop all layers
@@ -228,6 +234,12 @@ public class ConfigurationsPresenter {
            	for(LossFunctions.LossFunction lossFunction : LossFunctions.LossFunction.values())
            		if(lossFunctionList.get(i).equals(lossFunction) == false)
            			lossFunctionType.getItems().add(new MenuItem(lossFunction.name()));
+           	
+           	DropdownButton dropOutProbability = new DropdownButton();
+           	dropOutProbability.getItems().add(new MenuItem(dropOutProbabilityList.get(i).toString()));
+           	for(double k = 0.00; k <= 1.00; k += 0.01)
+          		if(dropOutProbabilityList.get(i) != k)
+          			dropOutProbability.getItems().add(new MenuItem(String.valueOf(k)));
            	/*
 	         * Add more here...
 	         */
@@ -235,7 +247,7 @@ public class ConfigurationsPresenter {
            	/*
            	 * Add a row now to our table
              */
-            listForLayerTable.addAll(new LayerConfigurationTable(layerType, nIn, nOut, activationType, lossFunctionType));
+            listForLayerTable.addAll(new LayerConfigurationTable(layerType, nIn, nOut, activationType, lossFunctionType, dropOutProbability));
            	
     	}
 	}
@@ -287,6 +299,7 @@ public class ConfigurationsPresenter {
     	ArrayList<Integer> nOutList = new ArrayList<Integer>(); 
     	ArrayList<Activation> activationList = new ArrayList<Activation>(); 
     	ArrayList<LossFunctions.LossFunction> lossFunctionList = new ArrayList<LossFunctions.LossFunction>(); 
+    	ArrayList<Double> dropOutProbabilityList = new ArrayList<Double>(); 
     	
     	/*
     	 * Loop thru all rows that are inside the table
@@ -301,6 +314,7 @@ public class ConfigurationsPresenter {
     		String nOut = layerConfigurationTable.getNOut().getSelectedItem().getText();
     		String activation = layerConfigurationTable.getActivationType().getSelectedItem().getText();
     		String lossFunction = layerConfigurationTable.getLossFunctionType().getSelectedItem().getText();
+    		String dropOutProbability = layerConfigurationTable.getDropOutProbability().getSelectedItem().getText();
     		
     		/*
     		 * Get all the times and place them into the array lists
@@ -310,6 +324,7 @@ public class ConfigurationsPresenter {
     		nOutList.add(Integer.parseInt(nOut));
     		activationList.add(Activation.valueOf(activation));
     		lossFunctionList.add(LossFunctions.LossFunction.valueOf(lossFunction));
+    		dropOutProbabilityList.add(Double.parseDouble(dropOutProbability));
     	}
     	
     	/*
@@ -320,6 +335,7 @@ public class ConfigurationsPresenter {
     	dL4JSerializableConfiguration.setNOutList(nOutList);
     	dL4JSerializableConfiguration.setActivationList(activationList);
     	dL4JSerializableConfiguration.setLossFunctionList(lossFunctionList);
+    	dL4JSerializableConfiguration.setDropOutProbabilityList(dropOutProbabilityList);
     	/*
          * Add more here...
          */
@@ -481,6 +497,10 @@ public class ConfigurationsPresenter {
        	DropdownButton lossFunctionType = new DropdownButton();
        	for(LossFunctions.LossFunction lossFunction : LossFunctions.LossFunction.values())
        		lossFunctionType.getItems().add(new MenuItem(lossFunction.name()));
+       	
+       	DropdownButton dropOutProbability = new DropdownButton();
+       	for(double k = 0.00; k <= 1.00; k += 0.01)
+       		dropOutProbability.getItems().add(new MenuItem(String.valueOf(k)));
        	/*
          * Add more here...
          */
@@ -488,6 +508,6 @@ public class ConfigurationsPresenter {
        	/*
        	 * Add a new row now to our table
          */
-        listForLayerTable.addAll(new LayerConfigurationTable(layerType, nIn, nOut, activationType, lossFunctionType));
+        listForLayerTable.addAll(new LayerConfigurationTable(layerType, nIn, nOut, activationType, lossFunctionType, dropOutProbability));
 	}
 }

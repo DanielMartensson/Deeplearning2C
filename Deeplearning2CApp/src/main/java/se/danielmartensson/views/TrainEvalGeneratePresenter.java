@@ -200,60 +200,58 @@ public class TrainEvalGeneratePresenter {
 			Layer layer = dL4JModel.getMultiLayerNetwork().getLayer(i);
 			Map<String, INDArray> weights = layer.paramTable();
 			
+		    /*
+		     * Notice that the current version of Deeplearning2C can only
+		     * generate DenseLayer to C-code. In other words, MLP to C-code. 
+	   	     * It's because DL4J have not yet make so LSTM weights are not available already, 
+		     * as I understand them. But the goal is to make LSTM available for C-code generation.
+		     */
+			
 			/*
-			 * Notice that the current version of Deeplearning2C can only
-			 * generate DenseLayer to C-code. In other words, MLP to C-code. 
-			 * It's because DL4J have not yet make so LSTM weights are not available already, 
-			 * as I understand them. But the goal is to make LSTM available for C-code generation.
+			 * We need to reverse [W, b] to [b, W] because we use W's dimensions last for BLAS
 			 */
-			if(weights.keySet().size() == 2){ // [W, b] = Dense layer
+			List<String> list = new ArrayList<>(weights.keySet());
+			Collections.reverse(list);
 				
-				/*
-				 * We need to reverse [W, b] to [b, W] because we use W's dimensions last for BLAS
-				 */
-				List<String> list = new ArrayList<>(weights.keySet());
-				Collections.reverse(list);
-				
-				/*
-				 * Print out matrix
-				 */
-				int totalColumns = 0;
-				int totalRows = 0;
-				for(String name : list) { 
-					INDArray matrix = weights.get(name);
-					totalRows = matrix.rows();
-					totalColumns = matrix.columns();
-					arrays += "\treal " + name + i + "["+totalRows+"*"+totalColumns+"]=";
-					String firstPart = matrix.toString().replace("[", ""); // Just replace [ to "" and ] to ""
-					String secondPart = firstPart.replace("]", "");
-					secondPart = "{" + secondPart + "}"; // Now we got a C-array
-					arrays += secondPart.replace("\n", "\n\t\t\t\t "); // This like make the matrices symmetrical
-					arrays += ";\n";
-				}
-				/*
-				 * For every complete list iteration, we have all matrices and vectors
-				 * Solve the equations like:
-				 * b0 = act(W0*input + b0)
-				 * b1 = act(W1*b0 + b1)
-				 * b2 = act(W2*b1 + b2)
-				 * b3 = act(W3*b2 + b3)
-				 * b4 = act(W4*b3 + b4)
-				 * ....
-				 * ....
-				 * output = act(Wi*b(i-1) + bi)
-				 */
-				arrays += "\tm = " + totalColumns + ";\n";
-				arrays += "\tn = " + totalRows + ";\n";
-				if(i == 0) {
-					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, input, &incx, &beta, b"+i+", &incy); // Layer - first - index " + i + "\n"; 
-					arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
-				}else if(i == totalLayers-1) {
-					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, output, &incy); // Layer - last - index " + i + "\n";
-					arrays += "\tactivation(output, m, \"" + activationList.get(i).toString() + "\");\n\n";
-				}else {
-					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, b"+i+", &incy); // Layer - middle - index " + i + "\n";
-					arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
-				}
+			/*
+			 * Print out matrix
+			 */
+			int totalColumns = 0;
+			int totalRows = 0;
+			for(String name : list) { 
+				INDArray matrix = weights.get(name);
+				totalRows = matrix.rows();
+				totalColumns = matrix.columns();
+				arrays += "\treal " + name + i + "["+totalRows+"*"+totalColumns+"]=";
+				String firstPart = matrix.toString().replace("[", ""); // Just replace [ to "" and ] to ""
+				String secondPart = firstPart.replace("]", "");
+				secondPart = "{" + secondPart + "}"; // Now we got a C-array
+				arrays += secondPart.replace("\n", "\n\t\t\t\t "); // This like make the matrices symmetrical
+				arrays += ";\n";
+			}
+			/*
+			 * For every complete list iteration, we have all matrices and vectors
+			 * Solve the equations like:
+			 * b0 = act(W0*input + b0)
+			 * b1 = act(W1*b0 + b1)
+			 * b2 = act(W2*b1 + b2)
+			 * b3 = act(W3*b2 + b3)
+			 * b4 = act(W4*b3 + b4)
+			 * ....
+			 * ....
+			 * output = act(Wi*b(i-1) + bi)
+			 */
+			arrays += "\tm = " + totalColumns + ";\n";
+			arrays += "\tn = " + totalRows + ";\n";
+			if(i == 0) {
+				arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, input, &incx, &beta, b"+i+", &incy); // Layer - first - index " + i + "\n"; 
+				arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
+			}else if(i == totalLayers-1) {
+				arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, output, &incy); // Layer - last - index " + i + "\n";
+				arrays += "\tactivation(output, m, \"" + activationList.get(i).toString() + "\");\n\n";
+			}else {
+				arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, b"+i+", &incy); // Layer - middle - index " + i + "\n";
+				arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
 			}
 		}
 		
@@ -263,7 +261,6 @@ public class TrainEvalGeneratePresenter {
 		String functionEnd = "}";
 		absolutPath = cPath + modelName + "/" + modelName + ".c";
 		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + blasParameters + arrays + functionEnd);	
-		
 	}
 
 	/**
@@ -330,7 +327,6 @@ public class TrainEvalGeneratePresenter {
 		}catch(IllegalStateException | IllegalArgumentException e) {
 			dialogs.exception("Cannot evaluate the model.", e);
 		}
-		
 	}
 
 	/**
@@ -388,5 +384,4 @@ public class TrainEvalGeneratePresenter {
 		appBar.getActionItems().remove(0);
 		appBar.getActionItems().add(0, MaterialDesignIcon.BUILD.button(e -> trainModel()));
 	}
-
 }

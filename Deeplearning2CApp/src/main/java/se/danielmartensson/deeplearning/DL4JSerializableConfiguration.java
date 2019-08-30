@@ -14,9 +14,7 @@ import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.Builder;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration.ListBuilder;
 import org.deeplearning4j.nn.conf.layers.DenseLayer;
-import org.deeplearning4j.nn.conf.layers.LSTM;
 import org.deeplearning4j.nn.conf.layers.OutputLayer;
-import org.deeplearning4j.nn.conf.layers.RnnOutputLayer;
 import org.deeplearning4j.nn.weights.WeightInit;
 import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.learning.config.AdaDelta;
@@ -45,7 +43,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta", "Nadam"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
-	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer", "RnnOutputLayer", "SimpleRnn"};
+	private final @Getter String[] layerNames = {"DenseLayer", "OutputLayer"};
 	
 	/*
 	 * Global configuration
@@ -68,6 +66,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private @Getter @Setter ArrayList<Integer> nOutList = new ArrayList<Integer>(); 
 	private @Getter @Setter ArrayList<Activation> activationList = new ArrayList<Activation>(); 
 	private @Getter @Setter ArrayList<LossFunctions.LossFunction> lossFunctionList = new ArrayList<LossFunctions.LossFunction>(); 
+	private @Getter @Setter ArrayList<Double> dropOutProbabilityList = new ArrayList<Double>(); 
 	
 	/**
 	 * This will load the configurations to the private fields
@@ -105,6 +104,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	        nOutList = dL4JSerializableConfiguration.getNOutList();
 	        activationList = dL4JSerializableConfiguration.getActivationList();
 	        lossFunctionList = dL4JSerializableConfiguration.getLossFunctionList();
+	        dropOutProbabilityList = dL4JSerializableConfiguration.getDropOutProbabilityList();
 	        /*
 	         * Add more here...
 	         */
@@ -197,33 +197,23 @@ public class DL4JSerializableConfiguration implements Serializable {
 							.nIn(nInList.get(i))
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))
+							.dropOut(dropOutProbabilityList.get(i)) 
 							.build());
-				}else if(layerList.get(i).equals(layerNames[1]) == true) { // LSTM
-					listBuilder.layer(new LSTM.Builder()
-							.nIn(nInList.get(i))
-							.nOut(nOutList.get(i))
-							.activation(activationList.get(i))
-							.build());
-				}else if(layerList.get(i).equals(layerNames[2]) == true) { // OutputLayer
+				}else if(layerList.get(i).equals(layerNames[1]) == true) { // OutputLayer
 					listBuilder.layer(new OutputLayer.Builder(lossFunctionList.get(i))
 							.nIn(nInList.get(i))
 							.nOut(nOutList.get(i))
 							.activation(activationList.get(i))
-							.build());
-				}else if(layerList.get(i).equals(layerNames[3]) == true) { // RnnOutputLayer
-					listBuilder.layer(new RnnOutputLayer.Builder(lossFunctionList.get(i))
-							.nIn(nInList.get(i))
-							.nOut(nOutList.get(i))
-							.activation(activationList.get(i))
+							.dropOut(dropOutProbabilityList.get(i)) 
 							.build());
 				}
+				/*
+		         * Add more here...
+		         */
 			}
 		}catch(DL4JInvalidConfigException e) {
 			new Dialogs().exception("Layer configuration error", e);
 		}
-			/*
-	         * Add more here...
-	         */
 		
 		/*
 		 * Return our configuration
@@ -239,12 +229,13 @@ public class DL4JSerializableConfiguration implements Serializable {
 	 * @param activation Activation function
 	 * @param lossfunction Loss function
 	 */
-	public void addLayer(String layerName, int inputs, int outputs, Activation activation, LossFunctions.LossFunction lossfunction) {
+	public void addLayer(String layerName, int inputs, int outputs, Activation activation, LossFunctions.LossFunction lossfunction, double dropOutProbability) {
 		layerList.add(layerName);
 		nInList.add(inputs);
 		nOutList.add(outputs);
 		activationList.add(activation);
 		lossFunctionList.add(lossfunction);
+		dropOutProbabilityList.add(dropOutProbability);
 	}
 	
 	/**
@@ -256,5 +247,6 @@ public class DL4JSerializableConfiguration implements Serializable {
 		nOutList.clear();
 		activationList.clear();
 		lossFunctionList.clear();
+		dropOutProbabilityList.clear();
 	}
 }

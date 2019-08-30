@@ -33,6 +33,7 @@
                         <TableColumn fx:id="outputColumn" prefWidth="57.0" text="Output" />
                         <TableColumn fx:id="activationColumn" prefWidth="44.0" text="Activation" />
                         <TableColumn fx:id="lossFunctionColumn" prefWidth="96.0" text="Loss function" />
+                        <TableColumn fx:id="dropOutProbabilityColumn" prefWidth="96.0" text="DropOut" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
