@@ -8,13 +8,17 @@ import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.deeplearning4j.nn.api.Layer;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.evaluation.classification.Evaluation;
 import org.nd4j.evaluation.regression.RegressionEvaluation;
+import org.nd4j.linalg.activations.Activation;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -54,7 +58,7 @@ public class TrainEvalGeneratePresenter {
 	FileHandler fileHandler = new FileHandler();
 	private DL4JModel dL4JModel;
 	private AtomicBoolean continueLoop = new AtomicBoolean();
-	private final String cPath = "/Deeplearning2CStorage/C/";
+	private final String cPath = "/Deeplearning2CStorage/cgeneration/";
 	
     @FXML
     void initialize() {
@@ -130,12 +134,6 @@ public class TrainEvalGeneratePresenter {
 		String creationDate = dateTimeFormatter.format(localDateTime);
 		
 		/*
-		 * Get table
-		 */
-		Map<String, INDArray> weights = dL4JModel.getMultiLayerNetwork().paramTable();
-		Set<String> weightsName = weights.keySet();
-		
-		/*
 		 * Write header file
 		 */
 		String modelName = dL4JModel.getDL4JSerializableConfiguration().getModelName();
@@ -154,54 +152,118 @@ public class TrainEvalGeneratePresenter {
 		/*
 		 * Write .h file now
 		 */
-		String absolutPath = cPath + modelName + ".h";
+		String absolutPath = cPath + modelName + "/" + modelName + ".h";
 		fileHandler.writeTextTo(absolutPath, comment + ifndef + define + function + endif);
 		
 		/*
-		 * Write .c file now - Begin to write down the matrices and vectors
+		 * Write .c file now - Write the includes
 		 */
-		String include = "#include " + modelName + ".h\n\n";
-		String functionStart = "void " + modelName + "(float* input, float* output){\n";
-		String arrays = "";
-		for(String weightName : weightsName) {
-			INDArray selectedWeight = weights.get(weightName);
-			int totalRows = selectedWeight.rows();
-			int totalColumns = selectedWeight.columns();
-			String arrayName = new StringBuilder(weightName).reverse().toString(); 
-			arrays += "\tconst float " + arrayName + "["+totalRows+"]["+totalColumns+"]=";
-			String firstPart = selectedWeight.toString().replace("[", "{"); // Just replace [ to { and ] to } and we got a C-array!
-			String secondPart = firstPart.replace("]", "}");
-			arrays += secondPart.replace("\n", "\n\t\t\t\t\t\t   "); // This like make the matrices symmetrical
-			arrays += ";\n\n";
-		}
+		String include = "#include " + "\"" + modelName + ".h\"\n";
+		include += "#include \"BLAS/f2c.h\"\n";
+		include += "#include \"BLAS/functions.h\"\n\n";
+		
 		/*
-		 * Now write the special functions
+		 * Write function name
 		 */
-		String layerFunctions = "";
-		int i = 0;
-		for(String weightName : weightsName) {
-			INDArray selectedWeight = weights.get(weightName);
-			int totalRows = selectedWeight.rows();
-			int totalColumns = selectedWeight.columns();
-			String arrayName = new StringBuilder(weightName).reverse().toString();
-			if(i == 0) {
-				layerFunctions += "\tfloat z"+i+"[" + totalColumns + "] = {0};\n";
-				layerFunctions += "\tlayer(z"+i + ", " + totalColumns + ", " + arrayName + ", input); // First layer\n"; 
-			}else if(i == weightsName.size()-1) {
-				layerFunctions += "\tlayer(output, " + totalColumns + ", " + arrayName + ", z"+(i-1)+"); // Last layer\n"; 
-			}else {
-				layerFunctions += "\tfloat z"+i+"[" + totalColumns + "] = {0};\n";
-				layerFunctions += "\tlayer(z"+i + ", " + totalColumns + ", " + arrayName + ", z"+(i-1) + ");\n"; 
+		String functionStart = "void " + modelName + "(float* input, float* output){\n\n";
+		
+		/*
+		 * Write the blas parameters
+		 */
+		String blasParameters = "\tinteger m = 0; // Real row dimension of non-transpose A\n" + 
+				"\tinteger n = 0; // Read column dimension of non-transpose A\n" + 
+				"\treal alpha = 1; // Always 1\n" + 
+				"\treal beta = 1; // Always 1\n" + 
+				"\tinteger incx = 1; // Always 1\n" + 
+				"\tinteger incy = 1; // Always 1\n" + 
+				"\tchar trans = 'N'; // We have transpose matrix A'\n\n";
+		
+		/*
+		 * Write the arrays - Get layers
+		 */
+		String arrays = "\t/*\n" + 
+				"\t * We are using BLAS subroutine sgemv for solving y = alpha*A*x + beta*y\n" + 
+				"\t * The BLAS subroutine is the same routine that is used in EmbeddedLapack\n" + 
+				"\t * Solve the equations like:\n" + 
+				"\t * b0 = act(W0*input + b0)\n" + 
+				"\t * b1 = act(W1*b0 + b1)\n" + 
+				"\t * b2 = act(W2*b1 + b2)\n" + 
+				"\t * b3 = act(W3*b2 + b3)\n" + 
+				"\t * b4 = act(W4*b3 + b4)\n" + 
+				"\t * ....\n" + 
+				"\t * ....\n" + 
+				"\t * output = act(Wi*b(i-1) + bi)\n" + 
+				"\t */\n\n";
+		
+		int totalLayers = dL4JModel.getMultiLayerNetwork().getnLayers();
+		ArrayList<Activation> activationList = dL4JModel.getDL4JSerializableConfiguration().getActivationList();
+		for(int i = 0; i < totalLayers; i++) {
+			Layer layer = dL4JModel.getMultiLayerNetwork().getLayer(i);
+			Map<String, INDArray> weights = layer.paramTable();
+			
+			/*
+			 * Notice that the current version of Deeplearning2C can only
+			 * generate DenseLayer to C-code. In other words, MLP to C-code. 
+			 * It's because DL4J have not yet make so LSTM weights are not available already, 
+			 * as I understand them. But the goal is to make LSTM available for C-code generation.
+			 */
+			if(weights.keySet().size() == 2){ // [W, b] = Dense layer
+				
+				/*
+				 * We need to reverse [W, b] to [b, W] because we use W's dimensions last for BLAS
+				 */
+				List<String> list = new ArrayList<>(weights.keySet());
+				Collections.reverse(list);
+				
+				/*
+				 * Print out matrix
+				 */
+				int totalColumns = 0;
+				int totalRows = 0;
+				for(String name : list) { 
+					INDArray matrix = weights.get(name);
+					totalRows = matrix.rows();
+					totalColumns = matrix.columns();
+					arrays += "\treal " + name + i + "["+totalRows+"*"+totalColumns+"]=";
+					String firstPart = matrix.toString().replace("[", ""); // Just replace [ to "" and ] to ""
+					String secondPart = firstPart.replace("]", "");
+					secondPart = "{" + secondPart + "}"; // Now we got a C-array
+					arrays += secondPart.replace("\n", "\n\t\t\t\t "); // This like make the matrices symmetrical
+					arrays += ";\n";
+				}
+				/*
+				 * For every complete list iteration, we have all matrices and vectors
+				 * Solve the equations like:
+				 * b0 = act(W0*input + b0)
+				 * b1 = act(W1*b0 + b1)
+				 * b2 = act(W2*b1 + b2)
+				 * b3 = act(W3*b2 + b3)
+				 * b4 = act(W4*b3 + b4)
+				 * ....
+				 * ....
+				 * output = act(Wi*b(i-1) + bi)
+				 */
+				arrays += "\tm = " + totalColumns + ";\n";
+				arrays += "\tn = " + totalRows + ";\n";
+				if(i == 0) {
+					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, input, &incx, &beta, b"+i+", &incy); // Layer - first - index " + i + "\n"; 
+					arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
+				}else if(i == totalLayers-1) {
+					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, output, &incy); // Layer - last - index " + i + "\n";
+					arrays += "\tactivation(output, m, \"" + activationList.get(i).toString() + "\");\n\n";
+				}else {
+					arrays += "\tsgemv_(&trans, &m, &n, &alpha, W"+i+", &m, b"+(i-1)+", &incx, &beta, b"+i+", &incy); // Layer - middle - index " + i + "\n";
+					arrays += "\tactivation(b"+i+", m, \"" + activationList.get(i).toString() + "\");\n\n";
+				}
 			}
-			i++;
 		}
 		
+		/*
+		 * Now write the whole .c file
+		 */
 		String functionEnd = "}";
-		absolutPath = cPath + modelName + ".c";
-		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + arrays + layerFunctions + functionEnd);
-
-		
-		
+		absolutPath = cPath + modelName + "/" + modelName + ".c";
+		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + blasParameters + arrays + functionEnd);	
 		
 	}
 

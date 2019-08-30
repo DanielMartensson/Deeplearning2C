@@ -45,7 +45,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta", "Nadam"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
-	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer", "RnnOutputLayer"};
+	private final @Getter String[] layerNames = {"DenseLayer", "LSTM", "OutputLayer", "RnnOutputLayer", "SimpleRnn"};
 	
 	/*
 	 * Global configuration

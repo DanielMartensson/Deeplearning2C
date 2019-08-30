@@ -31,9 +31,11 @@ public class FileHandler {
 	 */
 	public void runCreateDeleteTest(String filePath) {
 		File file = new File(localRoot + filePath);
+		String folderPath = file.getParent().replace(localRoot.getPath(), "");
 		file.mkdirs();
 		createTheFile(file);
 		file.delete();
+		deleteFolder(folderPath);
 	}
 	
 	/**
@@ -49,6 +51,22 @@ public class FileHandler {
 
 		if(file.delete() == false)
 			dialogs.alertDialog(AlertType.ERROR, "Delete", "Cannot delete file: \n" + filePath);
+	}
+	
+	/**
+	 * This will delete our folder
+	 * @param pathToFolder Our folder path
+	 */
+	public void deleteFolder(String pathToFolder) {
+		File folder = new File(localRoot + pathToFolder);
+		File[] files = folder.listFiles();
+		try {
+		for(File file : files)
+			file.delete(); // Delete all files first!
+		folder.delete(); // Now delete the folder
+		}catch(NullPointerException e) {
+			dialogs.exception("Could not delete folder. It did not exist, just continue.", e);
+		}
 	}
 	
 	/**
@@ -108,17 +126,23 @@ public class FileHandler {
 	}
 	
 	/**
-	 * Scan a folder and list all files
-	 * @param fileExtension File extension such as .csv, .txt or .png etc.
-	 * @param pathToFolder Our string path to the folder
+	 * This list all folder names only
+	 * @param pathToFolder Our folder path
 	 * @return File[]
 	 */
-	public File[] scanFolder(String fileExtension, String pathToFolder) {
+	public File[] scanFolderNames(String pathToFolder) {
 		File folder = new File(localRoot + pathToFolder);
-		if(folder.exists() == false) 
-			folder.mkdirs(); // Create one
-		
-		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
+		File[] directories = folder.listFiles(File::isDirectory);
+		sortByDateModified(directories);
+		return directories;
+	}
+	
+	/**
+	 * This method sorting the file objects by date modified
+	 * @param files Our File path
+	 * @return File[]
+	 */
+	private File[] sortByDateModified(File[] files) {
 		if (files != null) {
 			/*
 			 * Sort on date modified
@@ -134,6 +158,22 @@ public class FileHandler {
 		}else {
 			return null;
 		}
+	}
+
+	/**
+	 * Scan a folder and list all files
+	 * @param fileExtension File extension such as .csv, .txt or .png etc.
+	 * @param pathToFolder Our string path to the folder
+	 * @return File[]
+	 */
+	public File[] scanFolder(String fileExtension, String pathToFolder) {
+		File folder = new File(localRoot + pathToFolder);
+		if(folder.exists() == false) 
+			folder.mkdirs(); // Create one
+		
+		File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(fileExtension));
+		sortByDateModified(files);
+		return files;
 	}
 	
 	/**

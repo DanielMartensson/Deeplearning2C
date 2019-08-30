@@ -1,12 +1,16 @@
 package se.danielmartensson.views;
 
 import java.io.File;
+import java.io.IOException;
+
+import static java.nio.file.StandardCopyOption.*;
 
 import com.gluonhq.charm.glisten.animation.BounceInRightTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
+import com.google.common.io.Files;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -52,7 +56,8 @@ public class ModelsPresenter {
     /*
      * For table
      */
-    private final String modelPath = "/Deeplearning2CStorage/";
+    private final String modelPath = "/Deeplearning2CStorage/model/";
+    private final String cPath = "/Deeplearning2CStorage/cgeneration/";
 	private ObservableList<String> list;
 
     public void initialize() {
@@ -64,7 +69,7 @@ public class ModelsPresenter {
     	/*
     	 * Run this test so we make sure that we can create and delete files
     	 */
-    	fileHandler.runCreateDeleteTest(modelPath + "test" + ".zip");
+    	fileHandler.runCreateDeleteTest(modelPath + "test/test" + ".zip");
     	
     	/*
     	 * Slide smooth in and out
@@ -106,12 +111,12 @@ public class ModelsPresenter {
 		/*
 		 * Update the table view if we have files and select first row
 		 */
-		int totalFiles = fileHandler.countFiles(".zip", modelPath);
+		int totalFiles = fileHandler.scanFolderNames(modelPath).length;
 		if(totalFiles > 0) {
 			updateTableView();
 			tableView.getSelectionModel().selectFirst();
 			String modelName = tableView.getSelectionModel().getSelectedItem();
-			dL4JModel.loadModel(modelPath + modelName + ".zip", false);
+			dL4JModel.loadModel(modelPath + modelName + "/" + modelName + ".zip", false);
 		}
     }
     
@@ -136,9 +141,10 @@ public class ModelsPresenter {
     	 */
     	String modelName = tableView.getSelectionModel().getSelectedItem();
     	int selectedRow = tableView.getSelectionModel().getSelectedIndex() + 1;
-    	int totalFiles = fileHandler.countFiles(".zip", modelPath);
-    	fileHandler.deleteFile(modelPath + modelName + ".zip");
-    	fileHandler.deleteFile(modelPath + modelName + ".ser");
+    	int totalFiles = fileHandler.scanFolderNames(modelPath).length;
+    	fileHandler.deleteFolder(modelPath + modelName + "/");
+    	fileHandler.deleteFolder(cPath + modelName + "/BLAS/");
+    	fileHandler.deleteFolder(cPath + modelName + "/");
     	updateTableView();
     	if(selectedRow == totalFiles) // selectedRow can never be larger than totalFiles
     		tableView.getSelectionModel().selectLast();
@@ -154,7 +160,7 @@ public class ModelsPresenter {
 		if(modelName == null)
 			return; // No selected model
 		if(dialogs.question("Save", "Do you want to save " + modelName + " ?") == true)
-			dL4JModel.saveModel(modelPath + modelName + ".zip");
+			dL4JModel.saveModel(modelPath + modelName + "/" + modelName + ".zip");
 	}
 
 	/**
@@ -181,14 +187,30 @@ public class ModelsPresenter {
 		/*
 		 * Create the file and update the table and then select last row
 		 */
-		fileHandler.createNewFile(modelPath + modelName + ".zip", false);
+		fileHandler.createNewFile(modelPath + modelName + "/" + modelName + ".zip", false);
 		updateTableView();
 		tableView.getSelectionModel().selectLast();
 		
 		/*
 		 * Insert a real basic model into that .zip file we just created. Then save it.
 		 */
-		dL4JModel.createBasicModel(modelPath + modelName + ".zip");
+		dL4JModel.createBasicModel(modelPath + modelName + "/" + modelName + ".zip");
+		
+		/*
+		 * Create new empty C-files - source file and header and also move the folder BLAS in resources to cPath + modelName + "/
+		 */
+		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".c", true);
+		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".h", true);
+		File[] files = new File("src/main/resources/BLAS/").listFiles();
+		try {
+			for(File file : files) {
+				fileHandler.createNewFile(cPath + modelName + "/BLAS/" + file.getName(), true);
+				Files.copy(file, fileHandler.loadNewFile(cPath + modelName + "/BLAS/" + file.getName()));
+			}
+		} catch (IOException e) {
+			dialogs.exception("Cannot create initial C-files for BLAS", e);
+		}
+		
 	}
 
 	/**
@@ -196,10 +218,11 @@ public class ModelsPresenter {
 	 */
 	private void updateTableView() {
 		list.clear();
-		File[] files = fileHandler.scanFolder(".zip", modelPath);
+		File[] files = fileHandler.scanFolderNames(modelPath);
 		if(files != null)
-			for(File file : files) 
-				list.add(file.getName().replace(".zip", ""));
+			for(File file : files)
+				list.add(file.getName());
+			
 	}
 
 	/**
@@ -211,7 +234,7 @@ public class ModelsPresenter {
 		String modelName = tableView.getSelectionModel().getSelectedItem();
 		if(modelName == null)
 			return; // No selected model
-		dL4JModel.loadModel(modelPath + modelName + ".zip", true);
+		dL4JModel.loadModel(modelPath + modelName + "/" + modelName + ".zip", true);
     }
 	
 	

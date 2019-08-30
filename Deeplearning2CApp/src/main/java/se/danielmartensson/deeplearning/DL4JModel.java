@@ -50,7 +50,7 @@ public class DL4JModel {
 		 */
 		dL4JSerializableConfiguration.setSeed(100);
 		dL4JSerializableConfiguration.setOptimizationAlgorithm(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT);
-		dL4JSerializableConfiguration.setWeightInit(WeightInit.ONES);
+		dL4JSerializableConfiguration.setWeightInit(WeightInit.XAVIER);
 		dL4JSerializableConfiguration.setUpdaterName("Sgd");
 		dL4JSerializableConfiguration.setLearningRate(0.01);
 		dL4JSerializableConfiguration.setMomentum(0.01);
@@ -65,8 +65,9 @@ public class DL4JModel {
 		 */
 		dL4JSerializableConfiguration.clearLayer();
 		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
-		dL4JSerializableConfiguration.addLayer("LSTM", 3, 3, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
-		dL4JSerializableConfiguration.addLayer("OutputLayer", 3, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function effect this layer
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 3, 5, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 5, 7, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("OutputLayer", 7, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD); // Loss function effect this layer
 		/*
          * Add more here...
          */
