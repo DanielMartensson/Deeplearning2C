@@ -74,7 +74,7 @@ Step 18: And we store everything inside the observable list
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/Tutorials/Add%20new%20functionality%20to%20layers/Picture%2018.png)
 
-Step 19: Open up Scene Builder 8 and add a column
+Step 19: Open up Scene Builder 8 and add a column. Don't forget to set the ID to the column to! Look to the right.
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/Tutorials/Add%20new%20functionality%20to%20layers/Picture%2019.png)
 

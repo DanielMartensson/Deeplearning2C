@@ -199,6 +199,7 @@ public class TrainEvalGeneratePresenter {
 		for(int i = 0; i < totalLayers; i++) {
 			Layer layer = dL4JModel.getMultiLayerNetwork().getLayer(i);
 			Map<String, INDArray> weights = layer.paramTable();
+			//System.out.println(weights.keySet());
 			
 		    /*
 		     * Notice that the current version of Deeplearning2C can only

@@ -11,6 +11,24 @@ I have been using the following dependencies
 ## Why should I use this application?
 Let's say that you want to implement an deep neural network that are trained for classification for animals or other visible things. You want to implement it into a microcontroller such as STM32, PIC, AVR. Then this application can be used to generate a deep neural network in C code.
 
+## What kind neural network can this application generate in C?
+This application generate DenseLayer and OutputLayer from DL4J into C-code. 
+I will focusing on LSTM layers to, but the problem is that I have no idea how to get all the weight matrices from a LSTM layer.
+
+From this code in TrainEvalGeneratePresenter.java in method generateCCode()
+```
+Layer layer = dL4JModel.getMultiLayerNetwork().getLayer(i);
+Map<String, INDArray> weights = layer.paramTable();
+System.out.println(weights.keySet());
+```
+I get the output [W, b] for a DenseLayer and OutputLayer.
+I get the output [W, WR, b] for an LSTM layer. 
+
+I was given this Java class from Skymind engineers. So I assuming that the matrices [W, WR, b] contains several matrices. I just need to find its dimensions and what order they are placed to do the matrix math in C-code. 
+https://github.com/eclipse/deeplearning4j/blob/master/deeplearning4j/deeplearning4j-nn/src/main/java/org/deeplearning4j/nn/layers/recurrent/LSTMHelpers.java
+
+If you can send me a code(open an issue) how to get all weight matrices for a LSTM layer from [W, WR, b]. I will implement C-code generation for LSTM in this application.
+
 ## How does it looks like?
 Here are some images when I run Deeplearning2C on Linux.
 
@@ -175,11 +193,10 @@ Now you can download my Deeplearning2C project and import that project into your
 
 ## What need to be working on?
 
-* Make so C-code generation works. I have just getting header files to work.  Have a look at TrainEvalGeneratePresenter.java file 
 * Generate an application for Iphone. Iphone app generation works for this project, but I haven't tested it yet because I focusing on Android at the moment. 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 * Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
-* The view need to be better done. Sometimes, I can't even see the progress bar. Please use SceneBulilder 8 for that. 
+* Design and correct dimensions of components
 
 ## How is the project organized?
 I have always like clean god written code and pedagogy explanations. So I'm going to give you an introduction what every file do. I like to keep files as short as possible. Around 250-300 lines per each java file is a suitable java file. 
@@ -206,3 +223,4 @@ Every file inside se.danielmartensson.views package that contains the word "View
 * Tutorials -> Add new updater
 * Tutorials -> Add new layer
 * Tutorials -> Add inputs and outputs
+* Tutorials -> Add new functionality to layers
