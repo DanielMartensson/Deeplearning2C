@@ -11,7 +11,7 @@ I have been using the following dependencies
 ## Why should I use this application?
 Let's say that you want to implement an deep neural network that are trained for classification for animals or other visible things. You want to implement it into a microcontroller such as STM32, PIC, AVR. Then this application can be used to generate a deep neural network in C code.
 
-## What kind neural network can this application generate in C?
+## What kind of neural network can this application generate in C?
 This application generate DenseLayer and OutputLayer from DL4J into C-code. 
 I will focusing on LSTM layers to, but the problem is that I have no idea how to get all the weight matrices from a LSTM layer.
 
