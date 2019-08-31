@@ -18,6 +18,24 @@ repositories {
 
 mainClassName = 'se.danielmartensson.Main'
 
+configurations {
+     all*.exclude module: 'hdf5'
+     all*.exclude module: 'hdf5-platform'
+     all*.exclude module: 'leptonica'
+     all*.exclude module: 'opencv'
+     all*.exclude module: 'opencsv'
+     all*.exclude module: 'datavec-data-image'
+     all*.exclude module: 'charm-cloudlink-client'
+     all*.exclude module: 'deeplearning4j-ui-components'
+     all*.exclude module: 'joda-time'
+     all*.exclude module: 'gson'
+     all*.exclude module: 'sneakeyaml'
+     all*.exclude module: 'threetenbp'
+     all*.exclude module: 'stax2-api'
+     all*.exclude module: 'commons-net'
+     all*.exclude module: 'neoitertools'
+}
+
 dependencies {
     compile 'com.gluonhq:charm:5.0.2'
     compile group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-beta4'

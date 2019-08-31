@@ -149,7 +149,7 @@ void MnistNetwork(float* input, float* output){
 
 ## I like this project! How can I get the installation file?
 
-First of all. The installation file is over 600 megabytes. That's huge, but anyway it's still possible to install. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
+First of all. The installation file is over 600 megabytes if you don't exclude any  dependencies. That's huge, but anyway it's still possible to install. Right now, I have excluded the most large dependencies which I don't use. Look in the build.gradle. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
 
 1. Install OpenJDK 8
 
@@ -194,9 +194,14 @@ Now you can download my Deeplearning2C project and import that project into your
 ## What need to be working on?
 
 * Generate an application for Iphone. Iphone app generation works for this project, but I haven't tested it yet because I focusing on Android at the moment. 
+
 * Search for bugs. If you find any...please open an issue or a pull request. 
-* Scale down dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
-* Design and correct dimensions of components
+
+* Esclude some dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
+
+* Design and correct dimensions of components inside the .fxml files. Here I'm using Scene builder 8.
+
+* Upgrade the C-code generator for LSTM networks.
 
 ## How is the project organized?
 I have always like clean god written code and pedagogy explanations. So I'm going to give you an introduction what every file do. I like to keep files as short as possible. Around 250-300 lines per each java file is a suitable java file. 
