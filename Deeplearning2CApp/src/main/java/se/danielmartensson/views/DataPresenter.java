@@ -18,7 +18,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.stage.Screen;
 import se.danielmartensson.deeplearning.DL4JModel;
 import se.danielmartensson.tools.Dialogs;
@@ -60,12 +59,6 @@ public class DataPresenter {
 
     @FXML
     private DropdownButton possibleLabelsDropdownButton;
-    
-    @FXML
-    private ColumnConstraints gridColumn0;
-
-    @FXML
-    private ColumnConstraints gridColumn1;
 
     @FXML
     private Button executeData;
@@ -137,8 +130,6 @@ public class DataPresenter {
 		double heightScreen = Screen.getPrimary().getBounds().getHeight();
 		double widthScreen = Screen.getPrimary().getBounds().getWidth();
 		view.setPrefSize(widthScreen, heightScreen);
-		gridColumn0.setPrefWidth(widthScreen*0.2);
-		gridColumn1.setPrefWidth(widthScreen*0.8);
 		
 		/*
 		 * Set some default values for data type drop down button and delimiter drop down button

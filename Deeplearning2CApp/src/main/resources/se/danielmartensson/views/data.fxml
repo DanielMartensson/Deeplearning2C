@@ -5,22 +5,24 @@
 <?import com.gluonhq.charm.glisten.mvc.View?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
 
 <View fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.DataPresenter">
    <center>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints fx:id="gridColumn0" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints fx:id="gridColumn1" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <CardPane prefHeight="598.0" prefWidth="209.0" GridPane.columnIndex="1">
+            <CardPane HBox.hgrow="SOMETIMES">
+                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="CSV Data:" />
+                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Delimiter:" />
+                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Data type:" />
+               <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Batch size:" />
+               <Label fx:id="labelIndexFromLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index from:" />
+               <Label fx:id="labelIndexToLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index to:" />
+               <Label fx:id="possibleLabelsLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Possible labels:" />
+               <Label fx:id="possibleLabelsLabel1" style="-fx-padding: 14; -fx-font-size: 15;" text="Min scalar:" />
+               <Label fx:id="possibleLabelsLabel11" style="-fx-padding: 14; -fx-font-size: 15;" text="Max scalar:" />
+            </CardPane>
+            <CardPane HBox.hgrow="SOMETIMES">
                <items>
                   <DropdownButton fx:id="csvDropdownButton" style="-fx-padding: 10;" />
                   <DropdownButton fx:id="delimiterDropdownButton" style="-fx-padding: 10;" />
@@ -33,18 +35,7 @@
                   <DropdownButton fx:id="maxScalarDropdownButton" style="-fx-padding: 10;" />
                </items>
             </CardPane>
-            <CardPane>
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="CSV Data:" />
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Delimiter:" />
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Data type:" />
-               <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Batch size:" />
-               <Label fx:id="labelIndexFromLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index from:" />
-               <Label fx:id="labelIndexToLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index to:" />
-               <Label fx:id="possibleLabelsLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Possible labels:" />
-               <Label fx:id="possibleLabelsLabel1" style="-fx-padding: 14; -fx-font-size: 15;" text="Min scalar:" />
-               <Label fx:id="possibleLabelsLabel11" style="-fx-padding: 14; -fx-font-size: 15;" text="Max scalar:" />
-            </CardPane>
          </children>
-      </GridPane>
+      </HBox>
    </center>
 </View>

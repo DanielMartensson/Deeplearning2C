@@ -5,8 +5,8 @@
  *      Author: Daniel Mårtensson
  */
 
+#include <math.h>
 #include "f2c.h"
-#include "math.h"
 
 void activation(float* b, integer m, char* func){
 	if (strcmp(func, "CUBE") == 0){

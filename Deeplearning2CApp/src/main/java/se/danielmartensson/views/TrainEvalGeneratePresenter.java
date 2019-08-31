@@ -25,7 +25,6 @@ import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
-import javafx.scene.layout.RowConstraints;
 import javafx.stage.Screen;
 import se.danielmartensson.deeplearning.DL4JModel;
 import se.danielmartensson.deeplearning.DL4JThread;
@@ -43,12 +42,6 @@ public class TrainEvalGeneratePresenter {
     
     @FXML
     private ProgressBar progressBar;
-    
-    @FXML
-    private RowConstraints gridPane0;
-
-    @FXML
-    private RowConstraints gridPane1;
 
     /*
      * Fields
@@ -107,12 +100,8 @@ public class TrainEvalGeneratePresenter {
     	/*
 		 * Change the progress bar to correct size
 		 */
-		double heightScreen = Screen.getPrimary().getBounds().getHeight();
 		double widthScreen = Screen.getPrimary().getBounds().getWidth();
-		view.setPrefSize(widthScreen, heightScreen);
-		gridPane0.setPrefHeight(widthScreen*0.55);
-		gridPane1.setPrefHeight(heightScreen*0.45);
-		progressBar.setPrefSize(widthScreen, heightScreen*0.45);
+		progressBar.setPrefWidth(widthScreen);
 		
     }
 
