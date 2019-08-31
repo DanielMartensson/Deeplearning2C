@@ -25,7 +25,6 @@ configurations {
      all*.exclude module: 'opencv'
      all*.exclude module: 'opencsv'
      all*.exclude module: 'datavec-data-image'
-     all*.exclude module: 'charm-cloudlink-client'
      all*.exclude module: 'deeplearning4j-ui-components'
      all*.exclude module: 'joda-time'
      all*.exclude module: 'gson'

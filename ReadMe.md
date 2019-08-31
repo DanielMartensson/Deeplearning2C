@@ -1,3 +1,5 @@
+# Deeplearning2C Version 1.0
+
 ## What is this project?
 This is Deeplearning2C. It's a project for generate an application for Android, Iphone, Linux, Windows and Mac OS X, that can generate a deep neural network in a .c file after being trained with Deeplearning4J.
 
@@ -149,7 +151,7 @@ void MnistNetwork(float* input, float* output){
 
 ## I like this project! How can I get the installation file?
 
-First of all. The installation file is over 600 megabytes if you don't exclude any  dependencies. That's huge, but anyway it's still possible to install. Right now, I have excluded the most large dependencies which I don't use. Look in the build.gradle. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
+First of all. The installation file is over 372 megabytes for Android. That's huge, but anyway it's still possible to install. Right now, I have excluded the most large dependencies which I don't use. Look in the build.gradle file. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
 
 1. Install OpenJDK 8
 
@@ -197,7 +199,7 @@ Now you can download my Deeplearning2C project and import that project into your
 
 * Search for bugs. If you find any...please open an issue or a pull request. 
 
-* Esclude some dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network
+* Exclude some more dependencies inside the build.gradle file, and only use the most necessary for training the deep neural network.
 
 * Design and correct dimensions of components inside the .fxml files. Here I'm using Scene builder 8.
 
