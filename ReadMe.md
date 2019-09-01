@@ -68,6 +68,14 @@ Applied onto a Samsung Galaxy S3 from 2012 with Android 4.4.4. I have also teste
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
 
+Here I training my model at the Samsung S5 Neo. It take it slowly because the phone is old and slow. 
+
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Train%20Android.jpeg)
+
+I evaluate my model after the training.
+
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Eval%20Android.jpeg)
+
 This is how a C-code generation example looks like for this model.
 
 ```
