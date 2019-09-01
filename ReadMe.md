@@ -72,7 +72,7 @@ Here I training my model at the Samsung S5 Neo. It take it slowly because the ph
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Train%20Android.jpeg)
 
-I evaluate my model after the training.
+I evaluate my model after the training. This was just a test to check if the evaluation functionality works.
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Eval%20Android.jpeg)
 
