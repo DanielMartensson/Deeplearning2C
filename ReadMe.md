@@ -148,6 +148,7 @@ void ModelA(float* input, float* output){
 ```
 
 ## How can I run this application?
+You need to have OpenJDK 8 and OpenJFX 8 installed. If you are a linux user, you can follow step 1 and 2. 
 
 1. Install OpenJDK 8
 
