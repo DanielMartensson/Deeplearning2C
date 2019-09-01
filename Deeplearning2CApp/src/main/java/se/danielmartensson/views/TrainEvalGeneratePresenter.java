@@ -6,10 +6,10 @@ import com.gluonhq.charm.glisten.control.ProgressBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -117,11 +117,11 @@ public class TrainEvalGeneratePresenter {
 			return;
 		
 		/*
-		 * Get local date
+		 * Get local date - We use SimpleDateFormat because it's can be used with Java 6
 		 */
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");  
-		LocalDateTime localDateTime = LocalDateTime.now();  
-		String creationDate = dateTimeFormatter.format(localDateTime);
+		Date date = new Date();
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd h:mm:ss a");
+	    String creationDate = formatter.format(date);
 		
 		/*
 		 * Write header file
