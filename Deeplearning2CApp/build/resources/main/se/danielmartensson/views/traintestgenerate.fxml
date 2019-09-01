@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ProgressBar?>
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+
+<View fx:id="view" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.TrainEvalGeneratePresenter">
+   <bottom>
+      <ProgressBar fx:id="progressBar" progress="0.0" BorderPane.alignment="CENTER" />
+   </bottom>
+   <center>
+      <TextArea fx:id="textArea" editable="false" wrapText="true" BorderPane.alignment="CENTER" />
+   </center>
+</View>
