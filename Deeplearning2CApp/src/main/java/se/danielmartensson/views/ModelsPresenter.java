@@ -3,13 +3,15 @@ package se.danielmartensson.views;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
 
 import com.gluonhq.charm.glisten.animation.BounceInRightTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
-import com.google.common.io.Files;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -206,21 +208,28 @@ public class ModelsPresenter {
 		dL4JModel.createBasicModel(modelPath + modelName + "/" + modelName + ".zip");
 		
 		/*
-		 * Create new empty C-files - source file and header and also move the folder BLAS in resources to cPath + modelName + "/
+		 * Create new empty C-files
 		 */
 		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".c", true);
 		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".h", true);
-		File[] files = new File("src/main/resources/BLAS/").listFiles();
-		try {
-			for(File file : files) {
-				fileHandler.createNewFile(cPath + modelName + "/BLAS/" + file.getName(), true);
-				Files.copy(file, fileHandler.loadNewFile(cPath + modelName + "/BLAS/" + file.getName()));
-			}
-		} catch (IOException e) {
-			dialogs.exception("Cannot create initial C-files for BLAS", e);
-		}
 		
+		/*
+		 * Copy these files from blas folder by using input stream
+		 */
+		String[] blasFileNames = {"activation.c", "f2c.h", "functions.h", "lsame.c", "sgemv_.c", "xerbla_.c"};
+		for(String blasFileName : blasFileNames) {
+			InputStream inputStream = this.getClass().getResourceAsStream("blas/" + blasFileName);
+			String destinationPath = cPath + modelName + "/BLAS/" + blasFileName;
+			fileHandler.createNewFile(destinationPath, true);
+			File file = fileHandler.loadNewFile(destinationPath);
+			try {
+				FileUtils.copyInputStreamToFile(inputStream, file);
+			} catch (IOException e) {
+				dialogs.exception("Cannot move BLAS-files from resource folder", e);
+			}
+		}
 	}
+
 
 	/**
 	 * This method will update the table view
@@ -231,7 +240,6 @@ public class ModelsPresenter {
 		if(files != null)
 			for(File file : files)
 				list.add(file.getName());
-			
 	}
 
 	/**

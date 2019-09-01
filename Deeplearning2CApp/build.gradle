@@ -33,6 +33,7 @@ configurations {
      all*.exclude module: 'stax2-api'
      all*.exclude module: 'commons-net'
      all*.exclude module: 'neoitertools'
+
 }
 
 dependencies {
