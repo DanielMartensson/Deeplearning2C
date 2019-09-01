@@ -64,7 +64,7 @@ Now I evaluate my model.
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Eval.png)
 
-Applied onto a Samsung Galaxy S3 from 2012. I have also tested it onto a Samsung Galaxy S5 Neo from 2015. Both working to start. But the S3 phone have issues for pop-up dialogs and the S5 phone have issues when using the File IO from Google Commons. I will contact GluonHQ and ask for a solution. But for desktop use, it works perfect. I have not tested this application onto a modern phone with Android 9. Only Android 4.4 respective Android 6.0. 
+Applied onto a Samsung Galaxy S3 from 2012 with Android 4.4.4. I have also tested it onto a Samsung Galaxy S5 Neo from 2015 with Android 6.0.1. Both working to start. But the S3 phone have issues for pop-up dialogs. The application shut down when a pop-up appear, but the Samsung S5 Neo works to train a neural network with and generate C-code. 
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Samsung%20S3.jpeg)
 
