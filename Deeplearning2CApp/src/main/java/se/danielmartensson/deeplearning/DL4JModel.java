@@ -65,9 +65,9 @@ public class DL4JModel {
 		 * Layer configuration - We need at least ONE layer
 		 */
 		dL4JSerializableConfiguration.clearLayer();
-		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 0.5); // Loss function does not effect this layer
-		dL4JSerializableConfiguration.addLayer("DenseLayer", 3, 5, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 0.1); // Loss function does not effect this layer
-		dL4JSerializableConfiguration.addLayer("DenseLayer", 5, 7, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 0.8); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 4, 3, Activation.TANH, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 1.0); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 3, 5, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 1.0); // Loss function does not effect this layer
+		dL4JSerializableConfiguration.addLayer("DenseLayer", 5, 7, Activation.RELU, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 1.0); // Loss function does not effect this layer
 		dL4JSerializableConfiguration.addLayer("OutputLayer", 7, 3, Activation.SOFTMAX, LossFunctions.LossFunction.NEGATIVELOGLIKELIHOOD, 1.0); // Loss function effect this layer
 		/*
          * Add more here...

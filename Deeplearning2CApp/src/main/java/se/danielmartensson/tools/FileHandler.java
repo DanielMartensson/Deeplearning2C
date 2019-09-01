@@ -65,7 +65,7 @@ public class FileHandler {
 			file.delete(); // Delete all files first!
 		folder.delete(); // Now delete the folder
 		}catch(NullPointerException e) {
-			dialogs.exception("Could not delete folder. It did not exist, just continue.", e);
+			dialogs.exception("Could not delete folder " + folder.getName() + ". It did not exist, just continue.", e);
 		}
 	}
 	

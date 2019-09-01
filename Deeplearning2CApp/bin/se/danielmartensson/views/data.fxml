@@ -3,36 +3,46 @@
 <?import com.gluonhq.charm.glisten.control.CardPane?>
 <?import com.gluonhq.charm.glisten.control.DropdownButton?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<View fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.DataPresenter">
+<View fx:id="view" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.DataPresenter">
    <center>
-      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefWidth="404.0" style="-fx-background-color: #e5e2e1;" BorderPane.alignment="CENTER">
          <children>
-            <CardPane HBox.hgrow="SOMETIMES">
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="CSV Data:" />
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Delimiter:" />
-                <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Data type:" />
-               <Label style="-fx-padding: 14; -fx-font-size: 15;" text="Batch size:" />
-               <Label fx:id="labelIndexFromLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index from:" />
-               <Label fx:id="labelIndexToLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index to:" />
-               <Label fx:id="possibleLabelsLabel" style="-fx-padding: 14; -fx-font-size: 15;" text="Possible labels:" />
-               <Label fx:id="possibleLabelsLabel1" style="-fx-padding: 14; -fx-font-size: 15;" text="Min scalar:" />
-               <Label fx:id="possibleLabelsLabel11" style="-fx-padding: 14; -fx-font-size: 15;" text="Max scalar:" />
+            <CardPane HBox.hgrow="NEVER">
+                <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="CSV Data:" />
+                <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Delimiter:" />
+                <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Data type:" />
+               <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Batch size:" />
+               <Label fx:id="labelIndexFromLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index from:" />
+               <Label fx:id="labelIndexToLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index to:" />
+               <Label fx:id="possibleLabelsLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Possible labels:" />
+               <Label fx:id="possibleLabelsLabel1" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Min scalar:" />
+               <Label fx:id="possibleLabelsLabel11" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Max scalar:">
+                  <padding>
+                     <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                  </padding></Label>
             </CardPane>
-            <CardPane HBox.hgrow="SOMETIMES">
+            <CardPane HBox.hgrow="NEVER">
                <items>
-                  <DropdownButton fx:id="csvDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="delimiterDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="dataTypeDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="batchSizeDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="labelIndexFromDropDownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="labelIndexToDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="possibleLabelsDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="minScalarDropdownButton" style="-fx-padding: 10;" />
-                  <DropdownButton fx:id="maxScalarDropdownButton" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="csvDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="delimiterDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="dataTypeDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="batchSizeDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="labelIndexFromDropDownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="labelIndexToDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="possibleLabelsDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                  <DropdownButton fx:id="minScalarDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;">
+                     <padding>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </padding></DropdownButton>
+                  <DropdownButton fx:id="maxScalarDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;">
+                     <padding>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </padding></DropdownButton>
                </items>
             </CardPane>
          </children>

@@ -237,7 +237,7 @@ public class ConfigurationsPresenter {
            	
            	DropdownButton dropOutProbability = new DropdownButton();
            	dropOutProbability.getItems().add(new MenuItem(dropOutProbabilityList.get(i).toString()));
-           	for(double k = 0.00; k <= 1.00; k += 0.01)
+           	for(double k = 0.00; k <= 1.01; k += 0.01)
           		if(dropOutProbabilityList.get(i) != k)
           			dropOutProbability.getItems().add(new MenuItem(String.valueOf(k)));
            	/*
@@ -499,7 +499,7 @@ public class ConfigurationsPresenter {
        		lossFunctionType.getItems().add(new MenuItem(lossFunction.name()));
        	
        	DropdownButton dropOutProbability = new DropdownButton();
-       	for(double k = 0.00; k <= 1.00; k += 0.01)
+       	for(double k = 0.00; k <= 1.01; k += 0.01)
        		dropOutProbability.getItems().add(new MenuItem(String.valueOf(k)));
        	/*
          * Add more here...

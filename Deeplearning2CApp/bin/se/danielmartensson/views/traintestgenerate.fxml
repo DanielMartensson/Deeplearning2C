@@ -5,11 +5,11 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.BorderPane?>
 
-<View fx:id="view" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="335.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.TrainEvalGeneratePresenter">
+<View fx:id="view" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.views.TrainEvalGeneratePresenter">
    <bottom>
-      <ProgressBar fx:id="progressBar" prefHeight="45.0" prefWidth="252.0" progress="0.0" BorderPane.alignment="CENTER" />
+      <ProgressBar fx:id="progressBar" progress="0.0" BorderPane.alignment="CENTER" />
    </bottom>
    <center>
-      <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="335.0" wrapText="true" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="textArea" editable="false" wrapText="true" BorderPane.alignment="CENTER" />
    </center>
 </View>

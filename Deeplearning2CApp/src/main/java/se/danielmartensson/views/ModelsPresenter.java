@@ -180,9 +180,19 @@ public class ModelsPresenter {
 		}
 		
 		if(modelName.equals("") == true) {
+			dialogs.alertDialog(AlertType.INFORMATION, "Empty name", "Select another file name."); 
 			return;
 		}
 		
+		if(modelName.matches("[a-zA-Z0-9]*") == false) {
+			dialogs.alertDialog(AlertType.INFORMATION, "Only numbers and letters", "Select another file name."); 
+			return; // Contains more than letters and numbers? Return then.
+		}
+		
+		if(Character.isDigit(modelName.charAt(0)) == true) {
+			dialogs.alertDialog(AlertType.INFORMATION, "Model name cannot start with a number", "Select another file name.");
+			return; // Model name have a number at start. Not valid for C-code function names.
+		}
 		/*
 		 * Create the file and update the table and then select last row
 		 */

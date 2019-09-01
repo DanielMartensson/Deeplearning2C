@@ -101,7 +101,8 @@ public class TrainEvalGeneratePresenter {
 		 * Change the progress bar to correct size
 		 */
 		double widthScreen = Screen.getPrimary().getBounds().getWidth();
-		progressBar.setPrefWidth(widthScreen);
+		double heightScreen = Screen.getPrimary().getBounds().getHeight();
+		progressBar.setPrefSize(widthScreen, heightScreen*0.05);
 		
     }
 
