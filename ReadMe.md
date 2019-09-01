@@ -147,9 +147,7 @@ void ModelA(float* input, float* output){
 }
 ```
 
-## I like this project! How can I get the installation file?
-
-First of all. The installation file is over 372 megabytes for Android. That's huge, but anyway it's still possible to install. Right now, I have excluded the most large dependencies which I don't use. Look in the build.gradle file. You need to have OpenJDK 8 and OpenJFX 8 installed. If you are an Ubuntu user, then follow these steps:
+## How can I run this application?
 
 1. Install OpenJDK 8
 
@@ -175,21 +173,38 @@ sudo apt install openjfx=8u161-b12-1ubuntu2 libopenjfx-java=8u161-b12-1ubuntu2 l
 sudo apt-mark hold libopenjfx-java libopenjfx-jni openjfx openjfx-source
 ```
 
-3. Install Eclipse 2018-09 (4.9.0) R (Because Eclipse 2018-09 will only work with Gluon Plugin 2.6.0)
+3. Download the project and go to the project folder and run the command
+
+```
+./gradlew run
+```
+For Linux/Mac or
+```
+gradlew run
+```
+For Windows 
+
+## What IDE have you been using to develop on this application?
+
+I have been using Eclipse IDE.
+
+1. Install Eclipse 2018-09 (4.9.0) R (Because Eclipse 2018-09 will only work with Gluon Plugin 2.6.0)
 ```
   https://www.eclipse.org/downloads/packages/release/2018-09/r
 ```
 
-4. Install Gluon Plugin 2.6.0 inside Eclipse
+2. Install Gluon Plugin 2.6.0 inside Eclipse
 ```
   Help -> Eclipse Marketplace -> Gluon 2.6.0
 ```
 
-Now you can download my Deeplearning2C project and import that project into your Eclipse IDE.  Have fun and generate the .jar file for Win,Lin,Mac. 
+## How do I create the .apk file for Android? 
 
-5. (Optional) See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
+First of all. The installation file is over 372 megabytes for Android. That's huge, but anyway it's still possible to install. Right now, I have excluded the most large dependencies which I don't use. Look in the build.gradle file.
 
-6. (Optional) Troubleshooting for Android can be done this way, if you got some issues with the application on the phone, but not on desktop. See selected answer https://stackoverflow.com/questions/42253794/androidinstall-task-causes-a-no-connected-devices-error
+1. See the getting started guide for using GluonHQ JavaFX for mobile development. It's a very easy and excellent done graphical manual. It describes how to set up the Android SDK etc. https://docs.gluonhq.com/getting-started/#introduction
+
+2. Troubleshooting for Android can be done this way, if you got some issues with the application on the phone, but not on desktop. See selected answer https://stackoverflow.com/questions/42253794/androidinstall-task-causes-a-no-connected-devices-error
 
 ## What need to be working on?
 
