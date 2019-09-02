@@ -8,6 +8,9 @@
 #include <math.h>
 #include "f2c.h"
 
+/*
+ * I got these formulas from DL4J page
+ */
 void activation(float* b, integer m, char* func){
 	if (strcmp(func, "CUBE") == 0){
 		for(int i = 0; i < m; i++)
