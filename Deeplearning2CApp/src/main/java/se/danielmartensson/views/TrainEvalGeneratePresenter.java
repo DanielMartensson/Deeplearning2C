@@ -58,7 +58,7 @@ public class TrainEvalGeneratePresenter {
 	 * This is for start and stop buttons for appBar object
 	 */
 	private Button startButton = MaterialDesignIcon.PLAY_ARROW.button(e -> startTrain());
-	private Button stopButton = MaterialDesignIcon.STOP.button(e -> stopTrain());
+	private Button stopButton = MaterialDesignIcon.STOP.button(e -> continueLoop.set(false)); // This will end the thread
 	
     @FXML
     void initialize() {
@@ -127,7 +127,7 @@ public class TrainEvalGeneratePresenter {
 		 * Get local date - We use SimpleDateFormat because it's can be used with Java 6
 		 */
 		Date date = new Date();
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    String creationDate = formatter.format(date);
 		
 		/*
@@ -380,14 +380,5 @@ public class TrainEvalGeneratePresenter {
 		appBar.getActionItems().add(0, stopButton);
 		dL4JThread.start();
 		
-	}
-
-	/**
-	 * This method will stop the thread and then change back to PLAY_ARROW icon 
-	 */
-	private void stopTrain() {
-		continueLoop.set(false);
-		appBar.getActionItems().remove(0);
-		appBar.getActionItems().add(0, startButton);
 	}
 }
