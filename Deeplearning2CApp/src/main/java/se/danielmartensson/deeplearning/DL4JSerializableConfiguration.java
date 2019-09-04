@@ -40,7 +40,7 @@ public class DL4JSerializableConfiguration implements Serializable {
 	/*
 	 * List of strings - Change these? Then you need to change the if-statements in method runConfiguration(Builder builder) below
 	 */
-	private final @Getter String[] updaterList = {"Adam", "Sgd", "AdaMax", "Nesterovs", "AdaDelta", "Nadam"};
+	private final @Getter String[] updaterList = {"Sgd", "Adam", "Nesterovs", "AdaDelta", "AdaMax", "Nadam"};
 	private final @Getter String[] regularizationList = {"L1", "L2"};
 	private final @Getter String[] configurationNames = {"Seed", "Optimization algorithm", "Weight init", "Updater", "Learning rate", "Momentum", "Regularization", "Regularization coefficient"};
 	private final @Getter String[] layerNames = {"DenseLayer", "OutputLayer"};

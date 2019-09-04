@@ -7,9 +7,11 @@ import org.deeplearning4j.exception.DL4JException;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 
+import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.ProgressBar;
 
 import javafx.application.Platform;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 
 
@@ -23,6 +25,8 @@ public class DL4JThread extends Thread{
 	private int progressBarPosition;
 	private String endMessage;
 	private String[] textWall = new String[31]; // 31 elements
+	private AppBar appBar;
+	private Button startButton;
 	
 	/**
 	 * Constructor for model fitting
@@ -32,14 +36,18 @@ public class DL4JThread extends Thread{
 	 * @param progressBar
 	 * @param continueLoop
 	 * @param epochs
+	 * @param startButton 
+	 * @param appBar 
 	 */
-	public DL4JThread(MultiLayerNetwork multiLayerNetwork, DataSetIterator trainDataSetIterator, TextArea textArea, ProgressBar progressBar, AtomicBoolean continueLoop, int epochs) {
+	public DL4JThread(MultiLayerNetwork multiLayerNetwork, DataSetIterator trainDataSetIterator, TextArea textArea, ProgressBar progressBar, AtomicBoolean continueLoop, int epochs, AppBar appBar, Button startButton) {
 		this.multiLayerNetwork = multiLayerNetwork;
 		this.trainDataSetIterator = trainDataSetIterator;
 		this.textArea = textArea;
 		this.progressBar = progressBar;
 		this.continueLoop = continueLoop;
 		this.epochs = epochs;
+		this.appBar = appBar;
+		this.startButton = startButton;
 	}
 
 	@Override
@@ -118,5 +126,13 @@ public class DL4JThread extends Thread{
 		 * Print the status message
 		 */
 		Platform.runLater(() -> textArea.appendText(endMessage));
+		
+		/*
+		 * Change the icon to start button
+		 */
+		Platform.runLater(() -> {
+			appBar.getActionItems().remove(0);
+			appBar.getActionItems().add(0, startButton);
+		});
 	}
 }

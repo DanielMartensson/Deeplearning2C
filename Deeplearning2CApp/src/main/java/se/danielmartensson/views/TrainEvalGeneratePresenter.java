@@ -24,6 +24,7 @@ import org.nd4j.linalg.dataset.api.DataSet;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Screen;
 import se.danielmartensson.deeplearning.DL4JModel;
@@ -53,6 +54,12 @@ public class TrainEvalGeneratePresenter {
 	private AtomicBoolean continueLoop = new AtomicBoolean();
 	private final String cPath = "/Deeplearning2CStorage/cgeneration/";
 	
+	/*
+	 * This is for start and stop buttons for appBar object
+	 */
+	private Button startButton = MaterialDesignIcon.PLAY_ARROW.button(e -> startTrain());
+	private Button stopButton = MaterialDesignIcon.STOP.button(e -> stopTrain());
+	
     @FXML
     void initialize() {
     	/*
@@ -80,7 +87,7 @@ public class TrainEvalGeneratePresenter {
                 /*
                  * Listeners for appBar
                  */
-                appBar.getActionItems().add(MaterialDesignIcon.BUILD.button(e -> trainModel()));
+                appBar.getActionItems().add(startButton);
         		appBar.getActionItems().add(MaterialDesignIcon.BUSINESS.button(e -> evaluateModel()));
         		appBar.getActionItems().add(MaterialDesignIcon.COPYRIGHT.button(e -> generateCCode()));
         		
@@ -120,7 +127,7 @@ public class TrainEvalGeneratePresenter {
 		 * Get local date - We use SimpleDateFormat because it's can be used with Java 6
 		 */
 		Date date = new Date();
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd h:mm:ss a");
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	    String creationDate = formatter.format(date);
 		
 		/*
@@ -254,6 +261,11 @@ public class TrainEvalGeneratePresenter {
 		String functionEnd = "}";
 		absolutPath = cPath + modelName + "/" + modelName + ".c";
 		fileHandler.writeTextTo(absolutPath, comment + include + functionStart + blasParameters + arrays + functionEnd);	
+		
+		/*
+		 * Display success
+		 */
+		dialogs.alertDialog(AlertType.INFORMATION, "Success", "C-code generated!");
 	}
 
 	/**
@@ -325,7 +337,7 @@ public class TrainEvalGeneratePresenter {
 	/**
 	 * Train our model!
 	 */
-	private void trainModel() {
+	private void startTrain() {
 		/*
 		 * Do a quick check!
 		 */
@@ -363,18 +375,19 @@ public class TrainEvalGeneratePresenter {
 		continueLoop.set(true);
 		textArea.clear();
 		progressBar.setProgress(0);
-		DL4JThread dL4JThread = new DL4JThread(dL4JModel.getMultiLayerNetwork(), dL4JModel.getDL4JData().getTrainDataSetIterator(), textArea, progressBar, continueLoop, epochs);
+		DL4JThread dL4JThread = new DL4JThread(dL4JModel.getMultiLayerNetwork(), dL4JModel.getDL4JData().getTrainDataSetIterator(), textArea, progressBar, continueLoop, epochs, appBar, startButton);
 		appBar.getActionItems().remove(0);
-		appBar.getActionItems().add(0, MaterialDesignIcon.STOP.button(e -> stopTrain()));
+		appBar.getActionItems().add(0, stopButton);
 		dL4JThread.start();
+		
 	}
 
 	/**
-	 * This method will stop the thread and then change back to BUILD icon 
+	 * This method will stop the thread and then change back to PLAY_ARROW icon 
 	 */
 	private void stopTrain() {
 		continueLoop.set(false);
 		appBar.getActionItems().remove(0);
-		appBar.getActionItems().add(0, MaterialDesignIcon.BUILD.button(e -> trainModel()));
+		appBar.getActionItems().add(0, startButton);
 	}
 }

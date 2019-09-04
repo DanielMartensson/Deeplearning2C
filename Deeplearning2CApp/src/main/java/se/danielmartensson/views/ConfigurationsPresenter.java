@@ -118,12 +118,12 @@ public class ConfigurationsPresenter {
                 /*
                  * Reload the table when we slide in
                  */
-                if(reloadTable() == false) {
+                if(reloadGloabalConfig() == false) {
                 	dialogs.alertDialog(AlertType.INFORMATION, "Nothing", "No model where selected");
                 	listForGlobalTable.clear(); // If we have add a layer, just delete it
                 	listForLayerTable.clear();
                 }else {
-                	reloadView(); // That too!
+                	reloadLayers(); // That too!
                 }
                 
                 /*
@@ -179,7 +179,7 @@ public class ConfigurationsPresenter {
     /**
      * Load the table for the layers
      */
-    private void reloadView() {
+    private void reloadLayers() {
     	/*
     	 * Clear layer table first
     	 */
@@ -243,6 +243,17 @@ public class ConfigurationsPresenter {
            	/*
 	         * Add more here...
 	         */
+           	
+           	/*
+           	 * Listener for layerType
+           	 */
+            layerType.selectedItemProperty().addListener(e -> {
+            	if(layerType.getSelectedItem().getText().equals(layerNames[0]) == true) { // DenseLayer
+            		lossFunctionType.setDisable(true); // We don't need loss functions for dense layers
+            	}else {
+            		lossFunctionType.setDisable(false); // Only for output layers
+            	}
+            });
            	
            	/*
            	 * Add a row now to our table
@@ -345,7 +356,7 @@ public class ConfigurationsPresenter {
      * Reload the table and get the final string arrays from DL4JJasonConfiguration class
      * and also we use the enums from internal DL4J classes such as WeightInit and OptimizationAlgorithm etc.
      */
-    private boolean reloadTable()  {
+    private boolean reloadGloabalConfig()  {
     	listForGlobalTable.clear();
     	/*
     	 * Just check if we have any selected row numbers
@@ -371,6 +382,33 @@ public class ConfigurationsPresenter {
     	DropdownButton regularizationCoefficientDropdown = new DropdownButton();
     	DropdownButton learningRateDropdown = new DropdownButton();
     	DropdownButton momentumDropdown = new DropdownButton();
+    	
+    	/*
+    	 * Listener for updater so learning rate and momentum can be enabled or disabled
+    	 * Code borrow from runConfiguration(Builder builder) in DL4JSerializableConfiguration class
+    	 */
+    	updaterDropdown.selectedItemProperty().addListener(e -> {
+    		String updaterName = updaterDropdown.getSelectedItem().getText();
+    		if(updaterName.equals(updaterList[0]) == true) { // Sgd
+    			learningRateDropdown.setDisable(false);
+    			momentumDropdown.setDisable(true);
+    		}else if(updaterName.equals(updaterList[1]) == true) { // Adam
+    			learningRateDropdown.setDisable(false);
+    			momentumDropdown.setDisable(true);
+    		}else if(updaterName.equals(updaterList[2]) == true) { // Nesterovs
+    			learningRateDropdown.setDisable(false);
+    			momentumDropdown.setDisable(false);
+    		}else if(updaterName.equals(updaterList[3]) == true) { // AdaDelta
+    			learningRateDropdown.setDisable(true);
+        		momentumDropdown.setDisable(true);
+    		}else if(updaterName.equals(updaterList[4]) == true) { // AdaMax
+    			learningRateDropdown.setDisable(false);
+    			momentumDropdown.setDisable(true);
+    		}else if(updaterName.equals(updaterList[5]) == true) { // Nadam
+    			learningRateDropdown.setDisable(false);
+    			momentumDropdown.setDisable(true);
+    		}
+    	});
     	
     	/*
     	 * Add the menu items with string labels into drop down buttons
@@ -499,11 +537,22 @@ public class ConfigurationsPresenter {
        		lossFunctionType.getItems().add(new MenuItem(lossFunction.name()));
        	
        	DropdownButton dropOutProbability = new DropdownButton();
-       	for(double k = 0.00; k <= 1.01; k += 0.01)
+       	for(double k = 1.00; k >= -0.01; k -= 0.01)
        		dropOutProbability.getItems().add(new MenuItem(String.valueOf(k)));
        	/*
          * Add more here...
          */
+       	
+       	/*
+       	 * Listener for layerType
+       	 */
+        layerType.selectedItemProperty().addListener(e -> {
+        	if(layerType.getSelectedItem().getText().equals(layerNames[0]) == true) { // DenseLayer
+        		lossFunctionType.setDisable(true); // We don't need loss functions for dense layers
+        	}else {
+        		lossFunctionType.setDisable(false); // Only for output layers
+        	}
+        });
       		
        	/*
        	 * Add a new row now to our table
