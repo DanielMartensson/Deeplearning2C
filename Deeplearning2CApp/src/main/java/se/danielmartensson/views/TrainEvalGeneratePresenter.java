@@ -169,7 +169,7 @@ public class TrainEvalGeneratePresenter {
 		 * Write the blas parameters
 		 */
 		String blasParameters = "\tinteger m = 0; // Real row dimension of non-transpose A\n" + 
-				"\tinteger n = 0; // Read column dimension of non-transpose A\n" + 
+				"\tinteger n = 0; // Real column dimension of non-transpose A\n" + 
 				"\treal alpha = 1; // Always 1\n" + 
 				"\treal beta = 1; // Always 1\n" + 
 				"\tinteger incx = 1; // Always 1\n" + 

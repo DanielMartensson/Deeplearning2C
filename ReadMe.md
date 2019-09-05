@@ -99,7 +99,7 @@ This is how a C-code generation example looks like for this model.
 void ModelA(float* input, float* output){
 
 	integer m = 0; // Real row dimension of non-transpose A
-	integer n = 0; // Read column dimension of non-transpose A
+	integer n = 0; // Real column dimension of non-transpose A
 	real alpha = 1; // Always 1
 	real beta = 1; // Always 1
 	integer incx = 1; // Always 1
