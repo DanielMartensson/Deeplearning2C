@@ -3,6 +3,8 @@
 ## What is this project?
 This is Deeplearning2C. It's a project for generate an application for Android, Iphone, Linux, Windows and Mac OS X, that can generate a deep neural network in a .c file after being trained with Deeplearning4J.
 
+TODO: I will improve the code a little bit better. :) Any suggestions for new features, please open an issue.
+
 I have been using the following dependencies
 
 * Deeplearning4J
