@@ -223,7 +223,7 @@ First of all. The installation file is over 372 megabytes for Android. That's hu
 
 * Use AfterBurnerFX. This will reduce code and make DI-injection much better.
 
-* Make use if HashMaps instead of only use ArrayList<String>.
+* Make use of HashMaps instead of only use ArrayList<String> in DL4JSerializableConfiguration.java
 
 ## How is the project organized?
 I have always like clean god written code and pedagogy explanations. So I'm going to give you an introduction what every file do. I like to keep files as short as possible. Around 250-300 lines per each java file is a suitable java file. 
