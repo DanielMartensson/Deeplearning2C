@@ -3,7 +3,7 @@
 ## What is this project?
 This is Deeplearning2C. It's a project for generate an application for Android, Iphone, Linux, Windows and Mac OS X, that can generate a deep neural network in a .c file after being trained with Deeplearning4J.
 
-I have been using the following dependencies
+I have been using mimimal dependencies and liberaries. These are the the following dependencies I have been using:
 
 * Deeplearning4J
 * GluonHQ JavaFX for Android & Iphone development
@@ -213,17 +213,7 @@ First of all. The installation file is over 372 megabytes for Android. That's hu
 
 ## What need to be working on?
 
-* Generate an application for Iphone. Iphone app generation works for this project, but I haven't tested it yet because I focusing on Android at the moment. 
-
 * Upgrade the C-code generator for LSTM networks.
-
-* Upgrade C-code generation for RNN-networks.
-
-* Clean up some code. I'm using lots of comments. Comments are good, but I want // comments instead of /* */ comments.
-
-* Use AfterBurnerFX. This will reduce code and make DI-injection much better.
-
-* Make use of HashMaps instead of only use ArrayList<String> in DL4JSerializableConfiguration.java
 
 ## How is the project organized?
 I have always like clean god written code and pedagogy explanations. So I'm going to give you an introduction what every file do. I like to keep files as short as possible. Around 250-300 lines per each java file is a suitable java file. 
