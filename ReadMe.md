@@ -221,7 +221,7 @@ I have always like clean god written code and pedagogy explanations. So I'm goin
 * DrawerManager.java -> Handles the menu slide to the left
 * Main.java -> Handles the import of new JavaFX pages
 * DL4JData.java -> Handles everything that has to do with CSV handling for DL4J
-* DL4JModel.java -> Hnaldes everything that has to do with the model (save, load, generate etc.)
+* DL4JModel.java -> Handles everything that has to do with the model (save, load, generate etc.)
 * DL4JSerializableConfiguration.java -> Handles saving and loading layers and global config to .ser files
 * DL4JThread.java -> Handles training and using the text area and progress bar inside the TrainEvalGeneratePresenter.java file
 * Dialogs.java -> Handles everything that has to do with pop-up dialogs
