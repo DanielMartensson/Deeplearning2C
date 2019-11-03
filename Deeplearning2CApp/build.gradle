@@ -16,7 +16,7 @@ repositories {
     }
 }
 
-mainClassName = 'se.danielmartensson.Main'
+mainClassName = 'se.danielmartensson.deeplearning2c.Main'
 
 configurations {
      all*.exclude module: 'hdf5'
@@ -38,9 +38,9 @@ configurations {
 
 dependencies {
     compile 'com.gluonhq:charm:5.0.2'
-    compile group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-beta4'
-    compile group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-beta4'
-    compile group: 'org.datavec', name: 'datavec-api', version: '1.0.0-beta4'
+    compile group: 'org.deeplearning4j', name: 'deeplearning4j-core', version: '1.0.0-beta5'
+    compile group: 'org.nd4j', name: 'nd4j-native-platform', version: '1.0.0-beta5'
+    compile group: 'org.datavec', name: 'datavec-api', version: '1.0.0-beta5'
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.8'
     compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 }
@@ -53,7 +53,7 @@ jfxmobile {
     }
     android {
         manifest = 'src/android/AndroidManifest.xml'
-        targetSdkVersion = '28'
+        targetSdkVersion = '23'
         dexOptions {
             additionalParameters = ['--minimal-main-dex']
             keepRuntimeAnnotatedClasses = false

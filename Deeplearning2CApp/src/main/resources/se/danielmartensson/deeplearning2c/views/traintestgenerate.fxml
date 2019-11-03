@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.ProgressBar?>
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<View fx:id="view" xmlns="http://javafx.com/javafx/8.0.161-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.deeplearning2c.views.TrainEvalGeneratePresenter">
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+         <content>
+            <VBox alignment="CENTER">
+               <children>
+                  <TextArea fx:id="textArea" editable="false" wrapText="true" VBox.vgrow="ALWAYS" />
+                  <ProgressBar fx:id="progressBar" prefHeight="50.0" progress="0.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+</View>

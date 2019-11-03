@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.DropdownButton?>
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<View fx:id="view" xmlns="http://javafx.com/javafx/8.0.161-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="se.danielmartensson.deeplearning2c.views.DataPresenter">
+   <center>
+      <ScrollPane fitToHeight="true" fitToWidth="true" BorderPane.alignment="CENTER">
+         <content>
+            <VBox>
+               <children>
+                  <HBox>
+                     <children>
+                         <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="CSV Data:" />
+                        <DropdownButton fx:id="csvDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                         <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Delimiter:" />
+                        <DropdownButton fx:id="delimiterDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                         <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Data type:" />
+                        <DropdownButton fx:id="dataTypeDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Batch size:" />
+                        <DropdownButton fx:id="batchSizeDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="labelIndexFromLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index from:" />
+                        <DropdownButton fx:id="labelIndexFromDropDownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="labelIndexToLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Label index to:" />
+                        <DropdownButton fx:id="labelIndexToDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="possibleLabelsLabel" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Possible labels:" />
+                        <DropdownButton fx:id="possibleLabelsDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;" />
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="possibleLabelsLabel1" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Min scalar:" />
+                        <DropdownButton fx:id="minScalarDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;">
+                           <padding>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </padding>
+                        </DropdownButton>
+                     </children>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Label fx:id="possibleLabelsLabel11" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 14; -fx-font-size: 15;" text="Max scalar:">
+                           <padding>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </padding>
+                        </Label>
+                        <DropdownButton fx:id="maxScalarDropdownButton" maxWidth="150.0" prefWidth="150.0" style="-fx-padding: 10;">
+                           <padding>
+                              <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                           </padding>
+                        </DropdownButton>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </content>
+      </ScrollPane>
+   </center>
+</View>
