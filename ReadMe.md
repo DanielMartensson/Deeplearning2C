@@ -327,7 +327,7 @@ plot(t, y);
 ```
 And here is the result. Remember that even if I have used a linear model, I still implemented limits = nonlinearities.
 
-![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Identified.png)
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Identification.png)
 
 
 The M-file looks like this:
