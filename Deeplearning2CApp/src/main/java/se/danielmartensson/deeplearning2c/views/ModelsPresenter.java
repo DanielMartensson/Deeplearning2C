@@ -175,6 +175,10 @@ public class ModelsPresenter {
 		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".c", true);
 		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".h", true);
 		
+		// Create new empty M-files
+		fileHandler.createNewFile(cPath + modelName + "/" + modelName + ".m", true);
+		fileHandler.createNewFile(cPath + modelName + "/" + "act" + ".m", true); // This is the activations for the m-function
+		
 		// Copy these files from blas folder by using input stream
 		String[] blasFileNames = {"activation.c", "f2c.h", "functions.h", "lsame.c", "sgemv_.c", "xerbla_.c"};
 		for(String blasFileName : blasFileNames) {
@@ -184,9 +188,20 @@ public class ModelsPresenter {
 			File file = fileHandler.loadNewFile(destinationPath);
 			try {
 				FileUtils.copyInputStreamToFile(inputStream, file);
-			} catch (IOException e) {
+			} catch (IOException | NullPointerException e) {
 				dialogs.exception("Cannot move BLAS-files from resource folder", e);
 			}
+		}
+		
+		// Copy over the act.m file
+		InputStream inputStream = this.getClass().getResourceAsStream("blas/act.m");
+		String destinationPath = cPath + modelName + "/act.m";
+		fileHandler.createNewFile(destinationPath, true);
+		File file = fileHandler.loadNewFile(destinationPath);
+		try {
+			FileUtils.copyInputStreamToFile(inputStream, file);
+		} catch (IOException | NullPointerException e) {
+			dialogs.exception("Cannot move M-file act.m from resource folder", e);
 		}
 	}
 

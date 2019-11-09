@@ -3,6 +3,7 @@ package se.danielmartensson.deeplearning2c.deeplearning;
 import java.io.File;
 import java.io.IOException;
 
+import org.deeplearning4j.exception.DL4JInvalidConfigException;
 import org.deeplearning4j.nn.api.OptimizationAlgorithm;
 import org.deeplearning4j.nn.conf.MultiLayerConfiguration;
 import org.deeplearning4j.nn.conf.NeuralNetConfiguration;
@@ -79,8 +80,8 @@ public class DL4JModel {
 		listBuilder = dL4JSerializableConfiguration.runConfiguration(builder);
 		try {
 			multiLayerConfiguration = listBuilder.build();
-		} catch(IllegalStateException e) {
-			dialogs.exception("Cannot create basic model", e);
+		} catch(IllegalStateException | DL4JInvalidConfigException e) {
+			dialogs.alertDialog(AlertType.ERROR, "Cannot create model", e.getMessage());
 			dL4JSerializableConfiguration.clearLayer();
 			dL4JSerializableConfiguration.setModelName(null);
 			return;

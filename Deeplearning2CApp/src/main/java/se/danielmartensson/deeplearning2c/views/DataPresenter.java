@@ -132,6 +132,7 @@ public class DataPresenter {
 				// Change drop down buttons
 				possibleLabelsDropdownButton.setDisable(true);
 				labelIndexFromDropDownButton.setDisable(false);
+				labelIndexToDropdownButton.setDisable(false);
 				
 			}else {
 				// Change labels
@@ -141,6 +142,7 @@ public class DataPresenter {
 				
 				// Change drop down buttons
 				possibleLabelsDropdownButton.setDisable(false);
+				labelIndexFromDropDownButton.setDisable(true);
 				labelIndexToDropdownButton.setDisable(true);
 			}
 				

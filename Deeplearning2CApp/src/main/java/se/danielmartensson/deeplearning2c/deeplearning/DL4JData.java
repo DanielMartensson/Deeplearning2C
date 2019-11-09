@@ -32,11 +32,8 @@ public class DL4JData {
 	 * @param minScalar 		The maximum number we want
 	 */
 	public void loadData(File fileCSV, char delimiter, int batchSize, int labelIndexFrom, int labelIndexTo, int numPossibleLabels, boolean regression, int minScalar, int maxScalar) throws IOException, InterruptedException {
+		// Get the all data sets
 		dataSetIterator = readCSVDataset(fileCSV, delimiter, batchSize, labelIndexFrom, labelIndexTo, numPossibleLabels, regression);
-		
-		// Normalize the iterators
-		NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(minScalar, maxScalar);
-		normalizerMinMaxScaler.fit(dataSetIterator);
 		
 		// Calculate totalBatches = amount of data sets X batch size for each data set
 		long totalBatches = 0;
@@ -49,8 +46,14 @@ public class DL4JData {
 		
 		// Split the data into 50% train and 50% eval
 		DataSetIteratorSplitter dataSetIteratorSplitter = new DataSetIteratorSplitter(dataSetIterator, totalBatches, 0.5);
-		trainDataSetIterator = dataSetIteratorSplitter.getTestIterator();
+		trainDataSetIterator = dataSetIteratorSplitter.getTrainIterator();
 		evalDataSetIterator = dataSetIteratorSplitter.getTestIterator();
+	
+		// Normalize the data iterators
+		NormalizerMinMaxScaler normalizerMinMaxScaler = new NormalizerMinMaxScaler(minScalar, maxScalar);
+		normalizerMinMaxScaler.fit(trainDataSetIterator);
+		//normalizerMinMaxScaler.fit(evalDataSetIterator);
+
 	}
 
 	/**
