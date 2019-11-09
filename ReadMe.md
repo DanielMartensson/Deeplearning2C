@@ -325,11 +325,9 @@ end
 figure(2);
 plot(t, y);
 ```
-And here is the result. The left picture is identified and the right picture is measurement. They are very equal, even if it's a nonlinear model (linear with constraints)
+And here is the result. Remember that even if I have used a linear model, I still implemented limits = nonlinearities.
 
-![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Identification.png)
-
-![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Difference.png)
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Identified.png)
 
 
 The M-file looks like this:
