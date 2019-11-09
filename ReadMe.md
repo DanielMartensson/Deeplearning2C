@@ -329,6 +329,8 @@ And here is the result. The left picture is identified and the right picture is 
 
 ![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Identification.png)
 
+![a](https://raw.githubusercontent.com/DanielMartensson/Deeplearning2C/master/pictures/Difference.png)
+
 
 The M-file looks like this:
 ```
